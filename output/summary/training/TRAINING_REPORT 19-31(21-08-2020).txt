@@ -1,0 +1,12 @@
+* * * * * * * * * *SUMMARY REPORT* * * * * * * * * *TIME(TOTAL)         :           0.129 seconds 
+TIME(WORST)         :           0.02 seconds 
+TIME(BEST)          : 0.012 seconds 
+TIME(AVERAGE)       : 0.01433 seconds
+
+ACCURACY(WORST)     : 100.0 %
+ACCURACY(BEST)      : 100.0 %
+ACCURACY(AVERAGE)   : 100.0%
+
+OPTIMAL CLASSIFIER  : Classifier #1
+OPTIMAL ACCURACY    : 100.0%
+* * * * * * * * * *
