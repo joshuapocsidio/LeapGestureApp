@@ -16,7 +16,7 @@ def show(leap_controller, test_size=25):
         print("DATA CLASSIFICATION")
         print("-------------------")
 
-        # First - Show files available for classification (pickle files)
+        # Show files available for classification (pickle files)
         list_data_files =  io.get_data_files('.pickle')
         printer.print_numbered_list(list_data_files)
 
@@ -25,11 +25,11 @@ def show(leap_controller, test_size=25):
         chosen_pickle_no_extension = chosen_pickle.rsplit(".", 1)[0]
         kernel_type = chosen_pickle_no_extension.rsplit("_", 1)[-1]
 
-        # Second - Show feature type and kernel type based on chosen pickle file
+        # Show feature type and kernel type based on chosen pickle file
         print("Chosen Pickle : " + chosen_pickle)
         print("Kernel Type   : " + kernel_type)
 
-        # Third - Prompt user for gesture name and check if valid gesture
+        # Prompt user for gesture name and check if valid gesture
         gesture_name = raw_input("Enter the Gesture Name: ")
         gesture_name = lower(gesture_name)
 
@@ -47,7 +47,7 @@ def show(leap_controller, test_size=25):
                 valid_gesture = True
                 pass
 
-        # Fourth - Call data classification functions
+        # Call data classification functions
         trainer = LeapTrainer(classifier_name=chosen_pickle_no_extension, kernel_type=kernel_type)
         trainer.load_classifier(chosen_pickle)
 
