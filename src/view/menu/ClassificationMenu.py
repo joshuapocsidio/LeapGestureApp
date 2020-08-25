@@ -29,8 +29,8 @@ class ClassificationMenu:
             print("-------------------")
             print("DATA CLASSIFICATION")
             print("-------------------")
-            print("(1) - Single Feature Classification Test")
-            print("(2) - Multiple Feature Classification Test")
+            print("(1) - Single Feature:Kernel Classification Test")
+            print("(2) - Multiple Feature:Kernel Classification Test")
             print("(0) - Back")
 
             choice = raw_input("Your Choice: ")
