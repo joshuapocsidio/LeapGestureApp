@@ -61,6 +61,12 @@ def append_to_data_file(gesture_name, file_name, data_set):
     writer.write('\n')
     writer.close()
 
+# SUMMARY FUNCTIONS
+def append_to_report(file_name, line):
+    writer = open(file_name, 'a')
+    writer.write(line)
+    writer.write('\n')
+    writer.close()
 
 # TRAINING SUMMARY FUNCTIONS
 def create_training_report():
@@ -78,15 +84,21 @@ def create_training_report():
 
     return file_name
 
+# CLASSIFICATION SUMMARY FUNCTIONS
+def create_classification_report():
+    today = date.today()
+    now = datetime.now()
 
-def append_to_report(file_name, line):
-    if tra_dir not in file_name:
-        file_name = tra_dir + file_name
+    date_today = today.strftime("%d-%m-%Y")
+    time_now = now.strftime("%H-%M")
 
-    writer = open(file_name, 'a')
-    writer.write(line)
-    writer.write('\n')
+    file_name = "CLASSIFICATION_REPORT " + str(time_now) + "(" + str(date_today) + ").txt"
+    file_name = cla_dir + file_name
+
+    writer = open(file_name, 'w')
     writer.close()
+
+    return file_name
 
 
 # VALIDATION FUNCTIONS
