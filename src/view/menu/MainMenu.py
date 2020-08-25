@@ -1,4 +1,5 @@
-from view.menu import AcquisitionMenu, TrainingMenu, ClassificationMenu
+from view.menu import AcquisitionMenu, TrainingMenu
+from view.menu.ClassificationMenu import ClassificationMenu
 
 
 def show(controller):
@@ -22,7 +23,8 @@ def show(controller):
         elif choice == '2':
             TrainingMenu.show()
         elif choice == '3':
-            ClassificationMenu.show(leap_controller=controller)
+            classification_menu = ClassificationMenu(leap_controller=controller)
+            classification_menu.show()
         elif choice == '4':
             pass
         elif choice == '0':
