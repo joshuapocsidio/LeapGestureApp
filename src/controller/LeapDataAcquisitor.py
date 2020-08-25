@@ -13,7 +13,6 @@ def get_palm_to_finger_distance_set(leap_controller, gesture_name, iterations=1,
     labels = ["thumb", "index", "middle", "ring", "pinky"]
     print("ITERATIONS : " + str(iterations))
     feature_set = []
-    set_size = 0
 
     while len(feature_set) < iterations:
         if hand is None:
@@ -37,7 +36,6 @@ def get_palm_to_finger_distance_set(leap_controller, gesture_name, iterations=1,
         # Append set of finger data into a set
         feature_set.append(feature)
         hand = None
-        set_size += 1
 
         if return_mode is False:
             # Save data into a file
@@ -52,7 +50,6 @@ def get_palm_to_finger_angle_set(leap_controller, gesture_name, iterations=1, ha
     feature_set = []
 
     while len(feature_set) < iterations:
-
         if hand is None:
             # Obtain hand and fingers data
             hand = get_hand_data(leap_controller=leap_controller)
@@ -89,11 +86,14 @@ def get_palm_to_finger_angle_set(leap_controller, gesture_name, iterations=1, ha
         # Append set of finger data into a set
         feature_set.append(feature)
 
-    if return_mode is False:
-        # Save data into a file
-        LeapIO.save_data(file_name=file_name, gesture_name=gesture_name, data_set=feature_set)
-    else:
-        return feature_set
+        # Reset current hand
+        hand = None
+
+        if return_mode is False:
+            # Save data into a file
+            LeapIO.save_data(file_name=file_name, gesture_name=gesture_name, data_set=feature_set)
+        else:
+            return feature_set
 
 
 def get_finger_to_palm_angle_and_distance(leap_controller, gesture_name, iterations=1, hand=None, return_mode=False):
@@ -102,27 +102,29 @@ def get_finger_to_palm_angle_and_distance(leap_controller, gesture_name, iterati
     feature_set = []
 
     while len(feature_set) < iterations:
-
         if hand is None:
             # Obtain hand and fingers data
             hand = get_hand_data(leap_controller=leap_controller)
 
         fingers = hand.fingers
 
-        # Iterate through each finger and execute appropriate adjustments
+        # Iterate through each finger and obtain angle and distance data
         value_set = []
-
         angle_set = get_palm_to_finger_angle_set(leap_controller=leap_controller, gesture_name=gesture_name, hand=hand,
                                                  return_mode=True)
         distance_set = get_palm_to_finger_distance_set(leap_controller=leap_controller, gesture_name=gesture_name,
                                                        hand=hand, return_mode=True)
+
+        # Number of distances and angle should be the same
         num_angles = len(angle_set)
         num_distances = len(distance_set)
 
-        i = 0
+        if num_angles == num_distances:
+            num_data = num_distances
 
-        # Iterate through each data - up to number of giners
-        while i < num_distances:
+        # Iterate through each data - up to number of data obtained
+        i = 0
+        while i < num_data:
             angle = float(angle_set[i])
             distance = float(distance_set[i])
 
@@ -138,11 +140,14 @@ def get_finger_to_palm_angle_and_distance(leap_controller, gesture_name, iterati
         # Append set of finger data into a set
         feature_set.append(feature)
 
-    if return_mode is False:
-        # Save data into a file
-        LeapIO.save_data(file_name=file_name, gesture_name=gesture_name, data_set=feature_set)
-    else:
-        return feature_set
+        # Reset current hand
+        hand = None
+
+        if return_mode is False:
+            # Save data into a file
+            LeapIO.save_data(file_name=file_name, gesture_name=gesture_name, data_set=feature_set)
+        else:
+            return feature_set
 
 
 def get_distance_between_fingers_set(leap_controller, gesture_name, iterations=1, hand=None, return_mode=False):
@@ -151,7 +156,6 @@ def get_distance_between_fingers_set(leap_controller, gesture_name, iterations=1
     feature_set = []
 
     while len(feature_set) < iterations:
-
         if hand is None:
             # Obtain hand and fingers data
             hand = get_hand_data(leap_controller=leap_controller)
@@ -161,6 +165,7 @@ def get_distance_between_fingers_set(leap_controller, gesture_name, iterations=1
         # Iterate through each finger and execute appropriate adjustments
         value_set = []
 
+        # For each hand, iterate through each finger pairs and obtain data
         i = 0
         while i < (len(fingers) - 1):
             # Get fingers
@@ -182,11 +187,14 @@ def get_distance_between_fingers_set(leap_controller, gesture_name, iterations=1
         # Append set of finger data into a set
         feature_set.append(feature)
 
-    if return_mode is False:
-        # Save data into a file
-        LeapIO.save_data(file_name=file_name, gesture_name=gesture_name, data_set=feature_set)
-    else:
-        return feature_set
+        # Reset current hand
+        hand = None
+
+        if return_mode is False:
+            # Save data into a file
+            LeapIO.save_data(file_name=file_name, gesture_name=gesture_name, data_set=feature_set)
+        else:
+            return feature_set
 
 
 def get_all_hand_feature_type(leap_controller, gesture_name, iterations=1):
