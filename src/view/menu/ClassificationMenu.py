@@ -6,6 +6,7 @@ import controller.LeapDataAcquisitor as acquisitor
 from controller.LeapDataTrainer import LeapTrainer
 from string import lower, upper
 
+
 class ClassificationMenu:
     def __init__(self, leap_controller, test_size=5, gesture_src="gestures.txt"):
         # Checks gesture database - if does not exist --> Create default
@@ -208,21 +209,21 @@ class ClassificationMenu:
         # Calculate average accuracy of classification algorithm between multiple test hand instances
         accuracy = round(100.0 * (float(correct_classification) / (float(self.test_size))), 2)
 
-        summary = """FINAL RESULT
-                    Classifier :    %s (%s)
-                    Correct    :    %s
-                    Incorrect  :    %s
-                    Result     :    %s / %s
-                    Accuracy   :    %s %%
-                    Avg Time   :    %s seconds\n""" % (str(trainer.classifier_name),
-                                                       upper(str(trainer.kernel_type)),
-                                                       str(correct_classification),
-                                                       str(int(self.test_size) - correct_classification),
-                                                       str(correct_classification),
-                                                       str(self.test_size),
-                                                       str(accuracy),
-                                                       str(avg_time)
-                                                       )
+        summary = """____________________________________________________________________________________________________________________________________________________________________________________________________
+        Classifier :    %s (%s)
+        Correct    :    %s
+        Incorrect  :    %s
+        Result     :    %s / %s
+        Accuracy   :    %s %%
+        Avg Time   :    %s seconds\n""" % (str(trainer.classifier_name),
+                                           upper(str(trainer.kernel_type)),
+                                           str(correct_classification),
+                                           str(int(self.test_size) - correct_classification),
+                                           str(correct_classification),
+                                           str(self.test_size),
+                                           str(accuracy),
+                                           str(avg_time)
+                                           )
 
         # Print out results in summary form
         print summary
