@@ -60,8 +60,7 @@ class LeapTrainer:
 
     def classify(self, X):
         prediction = self.classifier.predict(X)
-        print "TEST : ", self.classifier.decision_function(X)
-        print(prediction)
+        print "DECISION FUNCTION : ", self.classifier.decision_function(X)
         return prediction
 
     def get_classifier(self):
