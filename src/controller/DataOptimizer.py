@@ -81,8 +81,10 @@ def analyze_classifiers(trainer_list, time_list, accuracy_list):
     summary += "SUMMARY REPORT\n"
     summary += "* * * * * * * * * *\n"
     # Construct summary report
-    summary += "TIME(TOTAL)         :           " + str(total_time) + " seconds \n"
-    summary += "TIME(WORST)         :           " + str(worst_time) + " seconds \n"
+    summary += "CLASSIFIER          : " + optimal_classifier.classifier_name + "\n"
+    summary += "KERNEL              : " + optimal_classifier.kernel_type + "\n"
+    summary += "TIME(TOTAL)         : " + str(total_time) + " seconds \n"
+    summary += "TIME(WORST)         : " + str(worst_time) + " seconds \n"
     summary += "TIME(BEST)          : " + str(best_time) + " seconds \n"
     summary += "TIME(AVERAGE)       : " + str(average_time) + " seconds\n\n"
 
