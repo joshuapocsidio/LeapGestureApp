@@ -11,7 +11,6 @@ def get_palm_to_finger_distance_set(leap_controller, gesture_name, iterations=1,
     # Initialize name of the file and labels
     file_name = 'finger-to-palm-distance'
     labels = ["thumb", "index", "middle", "ring", "pinky"]
-    print("ITERATIONS : " + str(iterations))
     feature_set = []
 
     while len(feature_set) < iterations:
