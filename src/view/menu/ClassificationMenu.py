@@ -1,4 +1,4 @@
-from datetime import time
+import time
 
 import leapio.LeapIO as io
 import leapio.Printer as printer
@@ -113,7 +113,7 @@ class ClassificationMenu:
             trainer_list.append(trainer)
 
             print(
-                        "System   :   Loaded Configuration -- Feature Type = " + current_pickle_no_extension + ", Kernel Type = " + kernel_type)
+                    "System   :   Loaded Configuration -- Feature Type = " + current_pickle_no_extension + ", Kernel Type = " + kernel_type)
 
         # Classify for each feature
         for trainer in trainer_list:
@@ -147,16 +147,23 @@ class ClassificationMenu:
     def classify_gesture(self, kernel_type, chosen_pickle_no_extension, chosen_gesture, trainer, time_list):
         if "finger-to-palm-distance" + "_" + kernel_type in chosen_pickle_no_extension:
             X_data = acquisitor.get_palm_to_finger_distance_set(leap_controller=self.leap_controller,
-                                                                gesture_name=chosen_gesture)
+                                                                gesture_name=chosen_gesture,
+                                                                return_mode=True)
             print(X_data)
         elif "finger-angle-using-bones" + "_" + kernel_type in chosen_pickle_no_extension:
-            X_data = acquisitor.get_palm_to_finger_angle_set(leap_controller=self.leap_controller)
+            X_data = acquisitor.get_palm_to_finger_angle_set(leap_controller=self.leap_controller,
+                                                             gesture_name=chosen_gesture,
+                                                             return_mode=True)
             print(X_data)
         elif "finger-angle-and-palm-distance" + "_" + kernel_type in chosen_pickle_no_extension:
-            X_data = acquisitor.get_finger_to_palm_angle_and_distance(leap_controller=self.leap_controller)
+            X_data = acquisitor.get_finger_to_palm_angle_and_distance(leap_controller=self.leap_controller,
+                                                                      gesture_name=chosen_gesture,
+                                                                      return_mode=True)
             print(X_data)
         elif "finger-between-distance" + "_" + kernel_type in chosen_pickle_no_extension:
-            X_data = acquisitor.get_distance_between_fingers_set(leap_controller=self.leap_controller)
+            X_data = acquisitor.get_distance_between_fingers_set(leap_controller=self.leap_controller,
+                                                                 gesture_name=chosen_gesture,
+                                                                 return_mode=True)
             print(X_data)
 
         # Recording timing of classification
