@@ -195,7 +195,7 @@ def read_row(file_name, index=0, delimiter=','):
     return data_list
 
 
-def read_gesture_database(file_name, index=0, delimiter=','):
+def read_col(file_name, index=0, delimiter=','):
     file_name = con_dir + file_name
     reader = open(file_name, 'r')
 
