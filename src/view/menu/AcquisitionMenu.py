@@ -1,4 +1,6 @@
 import controller.LeapDataAcquisitor as acquisitor
+import leapio.LeapIO as io
+import leapio.Printer as printer
 
 
 def show(controller):
@@ -18,13 +20,22 @@ def show(controller):
 
         choice = raw_input("Your Choice: ")
 
+        subject_list = io.read_col("subjects.txt")
+        print("------------")
+        print("SUBJECT NAME")
+        print("------------")
+        printer.print_numbered_list(subject_list)
+
+        subject_choice = raw_input("Choose subject name: ")
+        subject_name = subject_list[subject_choice]
+        print ""
+
         if choice == '1':
             # Get the gesture name
             gesture_name = prompt_gesture_name()
             iterations = prompt_iterations()
             # Call Data Acquisitor function
             acquisitor.get_palm_to_finger_distance_set(leap_controller=controller, gesture_name=gesture_name, iterations=iterations)
-            done = True
             pass
         elif choice == '2':
             # Get the gesture name
