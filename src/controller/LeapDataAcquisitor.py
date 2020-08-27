@@ -41,7 +41,7 @@ def get_palm_to_finger_distance_set(leap_controller, gesture_name, iterations=1,
             # Save data into a file
             LeapIO.save_data(file_name=file_name, gesture_name=gesture_name, data_set=feature)
         else:
-            return feature_set
+            return value_set
 
 
 def get_palm_to_finger_angle_set(leap_controller, gesture_name, iterations=1, hand=None, return_mode=False):
@@ -91,9 +91,9 @@ def get_palm_to_finger_angle_set(leap_controller, gesture_name, iterations=1, ha
 
         if return_mode is False:
             # Save data into a file
-            LeapIO.save_data(file_name=file_name, gesture_name=gesture_name, data_set=feature_set)
+            LeapIO.save_data(file_name=file_name, gesture_name=gesture_name, data_set=feature)
         else:
-            return feature_set
+            return value_set
 
 
 def get_finger_to_palm_angle_and_distance(leap_controller, gesture_name, iterations=1, hand=None, return_mode=False):
@@ -145,9 +145,9 @@ def get_finger_to_palm_angle_and_distance(leap_controller, gesture_name, iterati
 
         if return_mode is False:
             # Save data into a file
-            LeapIO.save_data(file_name=file_name, gesture_name=gesture_name, data_set=feature_set)
+            LeapIO.save_data(file_name=file_name, gesture_name=gesture_name, data_set=feature)
         else:
-            return feature_set
+            return value_set
 
 
 def get_distance_between_fingers_set(leap_controller, gesture_name, iterations=1, hand=None, return_mode=False):
@@ -182,6 +182,8 @@ def get_distance_between_fingers_set(leap_controller, gesture_name, iterations=1
             # Add the data to data_set
             value_set.append(distance)
 
+            i += 1
+
         # Convert into leap data
         feature = convert_to_leap_data_set(labels=labels, values=value_set)
         # Append set of finger data into a set
@@ -192,9 +194,9 @@ def get_distance_between_fingers_set(leap_controller, gesture_name, iterations=1
 
         if return_mode is False:
             # Save data into a file
-            LeapIO.save_data(file_name=file_name, gesture_name=gesture_name, data_set=feature_set)
+            LeapIO.save_data(file_name=file_name, gesture_name=gesture_name, data_set=feature)
         else:
-            return feature_set
+            return value_set
 
 
 def get_all_hand_feature_type(leap_controller, gesture_name, iterations=1):
