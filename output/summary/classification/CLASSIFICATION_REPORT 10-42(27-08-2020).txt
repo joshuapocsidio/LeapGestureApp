@@ -1,0 +1,7 @@
+FINAL RESULT
+                    Correct    :    25
+                    Incorrect  :    0
+                    Result     :    25 / 25
+                    Accuracy   :    100.0 %
+                    Avg Time   :    0.001000008 seconds
+
