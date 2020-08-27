@@ -1,4 +1,5 @@
 import time
+import numpy
 
 import leapio.LeapIO as io
 import leapio.Printer as printer
@@ -10,7 +11,7 @@ from string import lower
 # TODO : FOCUS ON CLASSIFICATION NOW
 
 class ClassificationMenu:
-    def __init__(self, leap_controller, test_size=25, gesture_src="gesture_database.txt"):
+    def __init__(self, leap_controller, test_size=5, gesture_src="gestures.txt"):
         # Checks gesture database - if does not exist --> Create default
         if io.does_file_exist(gesture_src) is False:
             io.create_gesture_database(gesture_src)
@@ -18,7 +19,7 @@ class ClassificationMenu:
 
         self.leap_controller = leap_controller
         self.test_size = test_size
-        self.gesture_list = io.read_gesture_database(gesture_src)
+        self.gesture_list = io.read_col(gesture_src)
         self.report_file = io.create_classification_report()
 
     def show(self):
@@ -43,6 +44,11 @@ class ClassificationMenu:
                 self.multiple_feature_classification()
                 done = True
                 pass
+            elif choice == '0':
+                done = True
+                pass
+            else:
+                print "Please try again."
 
     def single_feature_classification(self):
         # Show files available for classification (pickle files)
@@ -98,6 +104,10 @@ class ClassificationMenu:
         choice = raw_input("Enter the Gesture Name: ")
         chosen_gesture = lower(self.gesture_list[int(choice) - 1])
 
+        # Create time and classification dictionaries
+        time_dict = {}
+        cls_dict = {}
+
         # Create Leap Data Trainer for each feature type
         trainer_list = []
         for current_pickle in list_data_files:
@@ -111,59 +121,91 @@ class ClassificationMenu:
 
             # Append to list of trainers
             trainer_list.append(trainer)
+            # Append to dictionaries
+            time_dict[trainer] = []
+            cls_dict[trainer] = 0
 
             print(
                     "System   :   Loaded Configuration -- Feature Type = " + current_pickle_no_extension + ", Kernel Type = " + kernel_type)
 
-        # Classify for each feature
-        for trainer in trainer_list:
-            classifier_name = trainer.classifier_name
-            kernel_type = trainer.kernel_type
+        num_trainers = len(trainer_list)
 
-            time_list = []
-            correct_classification = 0
-
-            # Classify up to number of iterations for ALL feature types
-            i = 0
-            while i < int(self.test_size):
+        i = 0
+        while i < int(self.test_size):
+            hand = acquisitor.get_hand_data(leap_controller=self.leap_controller)
+            for trainer in trainer_list:
                 classification_res = self.classify_gesture(
-                    kernel_type=kernel_type,
-                    chosen_pickle_no_extension=classifier_name,
+                    kernel_type=trainer.kernel_type,
+                    chosen_pickle_no_extension=trainer.classifier_name,
                     chosen_gesture=chosen_gesture,
                     trainer=trainer,
-                    time_list=time_list
+                    time_list=time_dict[trainer],
+                    hand=hand
                 )
 
                 if classification_res is True:
-                    correct_classification += 1
+                    cls_dict[trainer] += 1
 
-                i += 1
+            i += 1
 
-            # Calculate and display results summary
-            self.process_results(correct_classification=correct_classification, time_list=time_list)
+        # Calculate and display results summary of all trainers
+        for trainer in trainer_list:
+            self.process_results(correct_classification=cls_dict[trainer], time_list=time_dict[trainer])
 
-        print("")
+        print ""
+        # # Classify for each feature
+        # for trainer in trainer_list:
+        #     classifier_name = trainer.classifier_name
+        #     kernel_type = trainer.kernel_type
+        #
+        #     time_list = []
+        #     correct_classification = 0
+        #
+        #     # Classify up to number of iterations for ALL feature types
+        #     i = 0
+        #     while i < int(self.test_size):
+        #         classification_res = self.classify_gesture(
+        #             kernel_type=kernel_type,
+        #             chosen_pickle_no_extension=classifier_name,
+        #             chosen_gesture=chosen_gesture,
+        #             trainer=trainer,
+        #             time_list=time_array[]
+        #         )
+        #
+        #         if classification_res is True:
+        #             correct_classification += 1
+        #
+        #         i += 1
+        #
+        #     # Calculate and display results summary
+        #     self.process_results(correct_classification=correct_classification, time_list=time_list)
+        #
+        # print("")
 
-    def classify_gesture(self, kernel_type, chosen_pickle_no_extension, chosen_gesture, trainer, time_list):
+    def classify_gesture(self, kernel_type, chosen_pickle_no_extension, chosen_gesture, trainer, time_list, hand):
         if "finger-to-palm-distance" + "_" + kernel_type in chosen_pickle_no_extension:
             X_data = acquisitor.get_palm_to_finger_distance_set(leap_controller=self.leap_controller,
                                                                 gesture_name=chosen_gesture,
-                                                                return_mode=True)
+                                                                return_mode=True,
+                                                                hand=hand)
             print(X_data)
         elif "finger-angle-using-bones" + "_" + kernel_type in chosen_pickle_no_extension:
             X_data = acquisitor.get_palm_to_finger_angle_set(leap_controller=self.leap_controller,
                                                              gesture_name=chosen_gesture,
-                                                             return_mode=True)
+                                                             return_mode=True,
+                                                             hand=hand)
             print(X_data)
         elif "finger-angle-and-palm-distance" + "_" + kernel_type in chosen_pickle_no_extension:
             X_data = acquisitor.get_finger_to_palm_angle_and_distance(leap_controller=self.leap_controller,
                                                                       gesture_name=chosen_gesture,
-                                                                      return_mode=True)
+                                                                      return_mode=True,
+                                                                      hand=hand)
             print(X_data)
         elif "finger-between-distance" + "_" + kernel_type in chosen_pickle_no_extension:
             X_data = acquisitor.get_distance_between_fingers_set(leap_controller=self.leap_controller,
                                                                  gesture_name=chosen_gesture,
-                                                                 return_mode=True)
+                                                                 return_mode=True,
+                                                                 hand=hand)
             print(X_data)
 
         # Recording timing of classification
