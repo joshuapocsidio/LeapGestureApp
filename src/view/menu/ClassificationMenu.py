@@ -1,14 +1,10 @@
 import time
-import numpy
 
 import leapio.LeapIO as io
 import leapio.Printer as printer
 import controller.LeapDataAcquisitor as acquisitor
 from controller.LeapDataTrainer import LeapTrainer
-from string import lower
-
-
-# TODO : FOCUS ON CLASSIFICATION NOW
+from string import lower, upper
 
 class ClassificationMenu:
     def __init__(self, leap_controller, test_size=5, gesture_src="gestures.txt"):
@@ -83,7 +79,8 @@ class ClassificationMenu:
             classification_res = self.classify_gesture(kernel_type=kernel_type,
                                                        chosen_pickle_no_extension=chosen_pickle_no_extension,
                                                        chosen_gesture=chosen_gesture, trainer=trainer,
-                                                       time_list=time_list)
+                                                       time_list=time_list
+                                                       )
 
             if classification_res is True:
                 correct_classification += 1
@@ -150,39 +147,16 @@ class ClassificationMenu:
 
         # Calculate and display results summary of all trainers
         for trainer in trainer_list:
-            self.process_results(correct_classification=cls_dict[trainer], time_list=time_dict[trainer])
+            self.process_results(
+                trainer=trainer,
+                correct_classification=cls_dict[trainer],
+                time_list=time_dict[trainer]
+            )
 
         print ""
-        # # Classify for each feature
-        # for trainer in trainer_list:
-        #     classifier_name = trainer.classifier_name
-        #     kernel_type = trainer.kernel_type
-        #
-        #     time_list = []
-        #     correct_classification = 0
-        #
-        #     # Classify up to number of iterations for ALL feature types
-        #     i = 0
-        #     while i < int(self.test_size):
-        #         classification_res = self.classify_gesture(
-        #             kernel_type=kernel_type,
-        #             chosen_pickle_no_extension=classifier_name,
-        #             chosen_gesture=chosen_gesture,
-        #             trainer=trainer,
-        #             time_list=time_array[]
-        #         )
-        #
-        #         if classification_res is True:
-        #             correct_classification += 1
-        #
-        #         i += 1
-        #
-        #     # Calculate and display results summary
-        #     self.process_results(correct_classification=correct_classification, time_list=time_list)
-        #
-        # print("")
 
     def classify_gesture(self, kernel_type, chosen_pickle_no_extension, chosen_gesture, trainer, time_list, hand):
+        X_data = []
         if "finger-to-palm-distance" + "_" + kernel_type in chosen_pickle_no_extension:
             X_data = acquisitor.get_palm_to_finger_distance_set(leap_controller=self.leap_controller,
                                                                 gesture_name=chosen_gesture,
@@ -228,18 +202,21 @@ class ClassificationMenu:
 
         return res
 
-    def process_results(self, correct_classification, time_list):
+    def process_results(self, trainer, correct_classification, time_list):
         # Calculate average time taken to perform classification algorithms between multiple test hand instances
         avg_time = (sum(time_list)) / (len(time_list))
         # Calculate average accuracy of classification algorithm between multiple test hand instances
         accuracy = round(100.0 * (float(correct_classification) / (float(self.test_size))), 2)
 
         summary = """FINAL RESULT
+                    Classifier :    %s (%s)
                     Correct    :    %s
                     Incorrect  :    %s
                     Result     :    %s / %s
                     Accuracy   :    %s %%
-                    Avg Time   :    %s seconds\n""" % (str(correct_classification),
+                    Avg Time   :    %s seconds\n""" % (str(trainer.classifier_name),
+                                                       upper(str(trainer.kernel_type)),
+                                                       str(correct_classification),
                                                        str(int(self.test_size) - correct_classification),
                                                        str(correct_classification),
                                                        str(self.test_size),
