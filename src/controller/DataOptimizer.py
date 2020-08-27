@@ -5,7 +5,7 @@ import time
 
 
 # Optimizes classifier based
-def obtain_optimal_classifier(csv_file_name, kernel_type, iterations=10):
+def obtain_optimal_classifier(csv_file_name, kernel_type, iterations=100):
     # Obtain csv file without extension
     csv_file_no_extension = csv_file_name.rsplit(".", 1)[0]
 
@@ -77,9 +77,9 @@ def analyze_classifiers(trainer_list, time_list, accuracy_list):
     index_max_accuracy = accuracy_list.index(best_accuracy)
     optimal_classifier = trainer_list[index_max_accuracy]
 
-    summary = "* * * * * * * * * *"
-    summary += "SUMMARY REPORT"
-    summary += "* * * * * * * * * *"
+    summary = "* * * * * * * * * *\n"
+    summary += "SUMMARY REPORT\n"
+    summary += "* * * * * * * * * *\n"
     # Construct summary report
     summary += "TIME(TOTAL)         :           " + str(total_time) + " seconds \n"
     summary += "TIME(WORST)         :           " + str(worst_time) + " seconds \n"
