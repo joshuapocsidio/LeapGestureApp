@@ -1,6 +1,7 @@
-import controller.LeapDataAcquisitor as acquisitor
+from controller.LeapDataAcquisitor import LeapDataAcquisitor
 import leapio.LeapIO as io
 import leapio.Printer as printer
+from string import lower
 
 
 def show(controller):
@@ -20,50 +21,54 @@ def show(controller):
 
         choice = raw_input("Your Choice: ")
 
-        subject_list = io.read_col("subjects.txt")
-        print("------------")
-        print("SUBJECT NAME")
-        print("------------")
-        printer.print_numbered_list(subject_list)
+        if choice != '0' and choice is not None and choice != '':
+            subject_list = io.read_col("subjects.txt")
+            print("------------")
+            print("SUBJECT NAME")
+            print("------------")
+            printer.print_numbered_list(subject_list)
 
-        subject_choice = raw_input("Choose subject name: ")
-        subject_name = subject_list[subject_choice]
-        print ""
+            subject_choice = raw_input("Choose subject name: ")
+            subject_name = subject_list[int(subject_choice) - 1]
+            print ""
+
+            # Initialise the Acquisitor
+            acquisitor = LeapDataAcquisitor(leap_controller=controller, subject_name=subject_name)
 
         if choice == '1':
             # Get the gesture name
             gesture_name = prompt_gesture_name()
             iterations = prompt_iterations()
             # Call Data Acquisitor function
-            acquisitor.get_palm_to_finger_distance_set(leap_controller=controller, gesture_name=gesture_name, iterations=iterations)
+            acquisitor.get_palm_to_finger_distance_set(gesture_name=gesture_name, iterations=iterations)
             pass
         elif choice == '2':
             # Get the gesture name
             gesture_name = prompt_gesture_name()
             iterations = prompt_iterations()
             # Call Data Acquisitor function
-            acquisitor.get_palm_to_finger_angle_set(leap_controller=controller, gesture_name=gesture_name, iterations=iterations)
+            acquisitor.get_palm_to_finger_angle_set(gesture_name=gesture_name, iterations=iterations)
             pass
         elif choice == '3':
             # Get the gesture name
             gesture_name = prompt_gesture_name()
             iterations = prompt_iterations()
             # Call Data Acquisitor function
-            acquisitor.get_finger_to_palm_angle_and_distance(leap_controller=controller, gesture_name=gesture_name, iterations=iterations)
+            acquisitor.get_finger_to_palm_angle_and_distance(gesture_name=gesture_name, iterations=iterations)
             pass
         elif choice == '4':
             # Get the gesture name
             gesture_name = prompt_gesture_name()
             iterations = prompt_iterations()
             # Call Data Acquisitor function
-            acquisitor.get_distance_between_fingers_set(leap_controller=controller, gesture_name=gesture_name, iterations=iterations)
+            acquisitor.get_distance_between_fingers_set(gesture_name=gesture_name, iterations=iterations)
             pass
         elif choice == '9':
             # Get the gesture name
             gesture_name = prompt_gesture_name()
             iterations = prompt_iterations()
             # Acquire all feature data
-            acquisitor.get_all_hand_feature_type(leap_controller=controller, gesture_name=gesture_name, iterations=iterations)
+            acquisitor.get_all_hand_feature_type(gesture_name=gesture_name, iterations=iterations)
             pass
         elif choice == '0':
             done = True
@@ -73,12 +78,17 @@ def show(controller):
             pass
 
 
-def prompt_gesture_name():
+def prompt_gesture_name(gesture_src='gestures.txt'):
     # Prompts user for name of gesture
     done = False
 
     while done is False:
-        gesture_name = raw_input("Gesture Name: ")
+        gesture_list = io.read_col(gesture_src)
+        print("* List of Valid Gestures *")
+        printer.print_numbered_list(gesture_list)
+        choice = raw_input("Enter the Gesture Name: ")
+        gesture_name = lower(gesture_list[int(choice) - 1])
+        print("")
 
         if gesture_name is not None or gesture_name is not "":
             done = True

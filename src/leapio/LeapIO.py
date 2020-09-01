@@ -2,6 +2,7 @@ import inspect
 import os
 import sys
 from datetime import date, datetime
+from string import upper, lower
 
 src_dir = os.path.dirname(inspect.getfile(inspect.currentframe()))
 lib_dir = os.path.abspath(os.path.join(src_dir, '../leapLib'))
@@ -16,8 +17,8 @@ cla_dir = sum_dir + "classification\\"
 
 
 # DATA FILE FUNCTIONS
-def save_data(file_name, gesture_name, data_set):
-    file_name = dat_dir + file_name + ".csv"
+def save_data(file_name, subject_name, gesture_name, data_set):
+    file_name = dat_dir + "(" + subject_name + ") " + file_name + ".csv"
     label_list = []
     value_list = []
 
@@ -30,7 +31,7 @@ def save_data(file_name, gesture_name, data_set):
     label_list.append("class")
 
     # Validate if file exist or if parameters match
-    validate_file(file_name=file_name, labels=label_list)
+    validate_data_file(file_name=file_name, labels=label_list)
 
     # After creating new file (or not), append to existing file
     append_to_data_file(gesture_name=gesture_name, file_name=file_name, data_set=value_list)
@@ -46,30 +47,42 @@ def create_data_file(file_name, labels):
 
 
 def append_to_data_file(gesture_name, file_name, data_set):
-    print("System       :       Appending Data File " + file_name)
-    values = []
+    if gesture_name is not None and file_name is not None:
+        print("System       :       Appending Data File " + file_name)
+        values = []
 
-    # Change list to string data
-    for data in data_set:
-        values.append(str(data))
+        # Change list to string data
+        for data in data_set:
+            values.append(str(data))
 
-    # Append the name of gesture for classification
-    values.append(gesture_name)
-    writer = open(file_name, "a")
-    line = ",".join(values)
-    writer.write(line)
-    writer.write('\n')
-    writer.close()
+        # Append the name of gesture for classification
+        values.append(gesture_name)
+        writer = open(file_name, "a")
+        line = ",".join(values)
+        writer.write(line)
+        writer.write('\n')
+        writer.close()
+
 
 # SUMMARY FUNCTIONS
+def save_report(subject_name, report_header, line, file_name=None):
+    # Validate the file name - creates new one if does not exist
+    file_name = validate_report_file(file_name=file_name, report_header=report_header, subject_name=subject_name)
+    # Append to report once validated
+    append_to_report(file_name=file_name, line=line)
+
+    return file_name
+
+
 def append_to_report(file_name, line):
-    writer = open(file_name, 'a')
-    writer.write(line)
-    writer.write('\n')
-    writer.close()
+    if line is not None:
+        writer = open(file_name, 'a')
+        writer.write(line)
+        writer.write('\n')
+        writer.close()
 
 # TRAINING SUMMARY FUNCTIONS
-def create_training_report():
+def create_training_report(subject_name):
     today = date.today()
     now = datetime.now()
 
@@ -77,15 +90,16 @@ def create_training_report():
     time_now = now.strftime("%H-%M")
 
     file_name = "TRAINING_REPORT " + str(time_now) + "(" + str(date_today) + ").txt"
-    file_name = tra_dir + file_name
+    file_name = tra_dir + "(" + subject_name + ") " + file_name
 
     writer = open(file_name, 'w')
     writer.close()
 
     return file_name
 
+
 # CLASSIFICATION SUMMARY FUNCTIONS
-def create_classification_report():
+def create_classification_report(subject_name):
     today = date.today()
     now = datetime.now()
 
@@ -93,7 +107,7 @@ def create_classification_report():
     time_now = now.strftime("%H-%M")
 
     file_name = "CLASSIFICATION_REPORT " + str(time_now) + "(" + str(date_today) + ").txt"
-    file_name = cla_dir + file_name
+    file_name = cla_dir + "(" + subject_name + ") " + file_name
 
     writer = open(file_name, 'w')
     writer.close()
@@ -102,7 +116,7 @@ def create_classification_report():
 
 
 # VALIDATION FUNCTIONS
-def validate_file(file_name, labels):
+def validate_data_file(file_name, labels):
     invalid = False
 
     if does_file_exist(file_name):
@@ -115,6 +129,18 @@ def validate_file(file_name, labels):
 
     if invalid is True:  # Only create file if specified file is invalid
         create_data_file(file_name=file_name, labels=labels)
+
+
+def validate_report_file(report_header, subject_name, file_name):
+    if file_name is None:
+        if lower(report_header) == 'training':
+            return create_training_report(subject_name)
+        elif lower(report_header) == 'classification':
+            return create_classification_report(subject_name)
+        else:
+            print "Invalid Report Heading"
+    else:
+        return file_name
 
 
 def does_file_exist(file_name):
@@ -143,7 +169,6 @@ def do_parameters_match(file_name, labels):
                 # Exit the method once a mismatch is found
                 if not file_label == other_label:
                     print("-" + file_label.strip() + '-')
-                    print("stop")
                     print('-' + other_label.strip() + '-')
                     print("Parameter mismatch")
                     return False

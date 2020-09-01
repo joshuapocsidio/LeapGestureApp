@@ -95,7 +95,7 @@ def analyze_classifiers(trainer_list, time_list, accuracy_list):
     summary += "OPTIMAL CLASSIFIER  : Classifier #" + str((index_max_accuracy + 1)) + "\n"
     summary += "OPTIMAL ACCURACY    : " + str(best_accuracy) + "%\n"
 
-    summary += "* * * * * * * * * *"
+    summary += "* * * * * * * * * *\n"
 
     print summary
 

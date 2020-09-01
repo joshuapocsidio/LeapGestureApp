@@ -69,10 +69,13 @@ def multi_training():
     Printer.print_numbered_list(kernel_list)
     print ""
 
+    file_name = None
     for data_file in data_files:
+        subject_name = data_file.rsplit("(", 1)[1].rsplit(")")[0]
         for kernel in kernel_list:
-            train_auto(csv_file=data_file, kernel_type=kernel)
-
+            training_summary = train_auto(csv_file=data_file, kernel_type=kernel)
+            file_name = io.save_report(file_name=file_name, subject_name=subject_name, report_header='training', line=training_summary)
+            pass
     pass
 
 
@@ -86,10 +89,8 @@ def train_auto(csv_file, kernel_type):
     training_summary = results[1]
 
     optimal_classifier.save_classifier()
-    file_name = io.create_training_report()
-    io.append_to_report(file_name=file_name, line=training_summary)
 
-    pass
+    return training_summary
 
 def train_manual(csv_file, kernel_type):
     results = DataOptimizer.obtain_optimal_classifier(

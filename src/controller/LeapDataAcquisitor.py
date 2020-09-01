@@ -55,7 +55,7 @@ class LeapDataAcquisitor:
 
             if return_mode is False:
                 # Save data into a file
-                LeapIO.save_data(file_name=file_name, gesture_name=gesture_name, data_set=feature)
+                LeapIO.save_data(file_name=file_name, subject_name=self.subject_name, gesture_name=gesture_name, data_set=feature)
             else:
                 return value_set
 
@@ -106,7 +106,7 @@ class LeapDataAcquisitor:
 
             if return_mode is False:
                 # Save data into a file
-                LeapIO.save_data(file_name=file_name, gesture_name=gesture_name, data_set=feature)
+                LeapIO.save_data(file_name=file_name, subject_name=self.subject_name, gesture_name=gesture_name, data_set=feature)
             else:
                 return value_set
 
@@ -159,7 +159,7 @@ class LeapDataAcquisitor:
 
             if return_mode is False:
                 # Save data into a file
-                LeapIO.save_data(file_name=file_name, gesture_name=gesture_name, data_set=feature)
+                LeapIO.save_data(file_name=file_name, subject_name=self.subject_name, gesture_name=gesture_name, data_set=feature)
             else:
                 return value_set
 
@@ -207,7 +207,7 @@ class LeapDataAcquisitor:
 
             if return_mode is False:
                 # Save data into a file
-                LeapIO.save_data(file_name=file_name, gesture_name=gesture_name, data_set=feature)
+                LeapIO.save_data(file_name=file_name, subject_name=self.subject_name, gesture_name=gesture_name, data_set=feature)
             else:
                 return value_set
 

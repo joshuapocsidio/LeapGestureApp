@@ -2,7 +2,7 @@ import time
 
 import leapio.LeapIO as io
 import leapio.Printer as printer
-import controller.LeapDataAcquisitor as acquisitor
+from controller.LeapDataAcquisitor import LeapDataAcquisitor
 from controller.LeapDataTrainer import LeapTrainer
 from string import lower, upper
 
@@ -17,7 +17,8 @@ class ClassificationMenu:
         self.leap_controller = leap_controller
         self.test_size = test_size
         self.gesture_list = io.read_col(gesture_src)
-        self.report_file = io.create_classification_report()
+        self.acquisitor = None
+        self.subject_name = None
 
     def show(self):
         # Shows menu for classifying gesture data
@@ -32,6 +33,21 @@ class ClassificationMenu:
             print("(0) - Back")
 
             choice = raw_input("Your Choice: ")
+
+            if choice != '0' and choice is not None and choice != '':
+                subject_list = io.read_col("subjects.txt")
+                print("------------")
+                print("SUBJECT NAME")
+                print("------------")
+                printer.print_numbered_list(subject_list)
+
+                subject_choice = raw_input("Choose subject name: ")
+                self.subject_name = subject_list[int(subject_choice) - 1]
+                print ""
+
+                # Initialise the Acquisitor
+                self.acquisitor = LeapDataAcquisitor(leap_controller=self.leap_controller,
+                                                     subject_name=self.subject_name)
 
             if choice == '1':
                 self.single_feature_classification()
@@ -52,6 +68,7 @@ class ClassificationMenu:
         list_data_files = io.get_data_files('.pickle')
         print("* List of Pickle Files *")
         printer.print_numbered_list(list_data_files)
+        print "\n"
 
         choice = raw_input("Enter the pickle file for classifier \nPickle Index  : ")
         chosen_pickle = list_data_files[int(choice) - 1]
@@ -62,11 +79,8 @@ class ClassificationMenu:
         print("Chosen Pickle : " + chosen_pickle)
         print("Kernel Type   : " + kernel_type + "\n")
 
-        print("* List of Valid Gestures *")
-        printer.print_numbered_list(self.gesture_list)
-        choice = raw_input("Enter the Gesture Name: ")
-        chosen_gesture = lower(self.gesture_list[int(choice) - 1])
-        print("")
+        # Prompt user for gesture name
+        chosen_gesture = self.prompt_gesture_name()
 
         # Call data classification functions
         trainer = LeapTrainer(classifier_name=chosen_pickle_no_extension, kernel_type=kernel_type)
@@ -89,18 +103,21 @@ class ClassificationMenu:
             i += 1
 
         # Calculate and display results summary
-        self.process_results(correct_classification=correct_classification, time_list=time_list)
+        self.process_results(
+            gesture_name=chosen_gesture,
+            correct_classification=correct_classification,
+            time_list=time_list
+        )
 
     def multiple_feature_classification(self):
         # Show files available for classification (pickle files)
         list_data_files = io.get_data_files('.pickle')
         print("* List of Pickle Files *")
         printer.print_numbered_list(list_data_files)
+        print "\n"
 
-        print("* List of Valid Gestures *")
-        printer.print_numbered_list(self.gesture_list)
-        choice = raw_input("Enter the Gesture Name: ")
-        chosen_gesture = lower(self.gesture_list[int(choice) - 1])
+        # Prompt user for gesture name
+        chosen_gesture = self.prompt_gesture_name()
 
         # Create time and classification dictionaries
         time_dict = {}
@@ -130,7 +147,7 @@ class ClassificationMenu:
 
         i = 0
         while i < int(self.test_size):
-            hand = acquisitor.get_hand_data(leap_controller=self.leap_controller)
+            hand = self.acquisitor.get_hand_data()
             for trainer in trainer_list:
                 classification_res = self.classify_gesture(
                     kernel_type=trainer.kernel_type,
@@ -146,9 +163,12 @@ class ClassificationMenu:
 
             i += 1
 
+        file_name = None
         # Calculate and display results summary of all trainers
         for trainer in trainer_list:
-            self.process_results(
+            file_name = self.process_results(
+                gesture_name=chosen_gesture,
+                file_name=file_name,
                 trainer=trainer,
                 correct_classification=cls_dict[trainer],
                 time_list=time_dict[trainer]
@@ -159,28 +179,24 @@ class ClassificationMenu:
     def classify_gesture(self, kernel_type, chosen_pickle_no_extension, chosen_gesture, trainer, time_list, hand):
         X_data = []
         if "finger-to-palm-distance" + "_" + kernel_type in chosen_pickle_no_extension:
-            X_data = acquisitor.get_palm_to_finger_distance_set(leap_controller=self.leap_controller,
-                                                                gesture_name=chosen_gesture,
-                                                                return_mode=True,
-                                                                hand=hand)
+            X_data = self.acquisitor.get_palm_to_finger_distance_set(gesture_name=chosen_gesture,
+                                                                     return_mode=True,
+                                                                     hand=hand)
             print(X_data)
         elif "finger-angle-using-bones" + "_" + kernel_type in chosen_pickle_no_extension:
-            X_data = acquisitor.get_palm_to_finger_angle_set(leap_controller=self.leap_controller,
-                                                             gesture_name=chosen_gesture,
-                                                             return_mode=True,
-                                                             hand=hand)
+            X_data = self.acquisitor.get_palm_to_finger_angle_set(gesture_name=chosen_gesture,
+                                                                  return_mode=True,
+                                                                  hand=hand)
             print(X_data)
         elif "finger-angle-and-palm-distance" + "_" + kernel_type in chosen_pickle_no_extension:
-            X_data = acquisitor.get_finger_to_palm_angle_and_distance(leap_controller=self.leap_controller,
-                                                                      gesture_name=chosen_gesture,
-                                                                      return_mode=True,
-                                                                      hand=hand)
+            X_data = self.acquisitor.get_finger_to_palm_angle_and_distance(gesture_name=chosen_gesture,
+                                                                           return_mode=True,
+                                                                           hand=hand)
             print(X_data)
         elif "finger-between-distance" + "_" + kernel_type in chosen_pickle_no_extension:
-            X_data = acquisitor.get_distance_between_fingers_set(leap_controller=self.leap_controller,
-                                                                 gesture_name=chosen_gesture,
-                                                                 return_mode=True,
-                                                                 hand=hand)
+            X_data = self.acquisitor.get_distance_between_fingers_set(gesture_name=chosen_gesture,
+                                                                      return_mode=True,
+                                                                      hand=hand)
             print(X_data)
 
         # Recording timing of classification
@@ -203,7 +219,7 @@ class ClassificationMenu:
 
         return res
 
-    def process_results(self, trainer, correct_classification, time_list):
+    def process_results(self, trainer, correct_classification, time_list, file_name, gesture_name):
         # Calculate average time taken to perform classification algorithms between multiple test hand instances
         avg_time = (sum(time_list)) / (len(time_list))
         # Calculate average accuracy of classification algorithm between multiple test hand instances
@@ -211,12 +227,14 @@ class ClassificationMenu:
 
         summary = """____________________________________________________________________________________________________________________________________________________________________________________________________
         Classifier :    %s (%s)
+        Gesture    :    %s
         Correct    :    %s
         Incorrect  :    %s
         Result     :    %s / %s
         Accuracy   :    %s %%
         Avg Time   :    %s seconds\n""" % (str(trainer.classifier_name),
                                            upper(str(trainer.kernel_type)),
+                                           gesture_name,
                                            str(correct_classification),
                                            str(int(self.test_size) - correct_classification),
                                            str(correct_classification),
@@ -228,4 +246,22 @@ class ClassificationMenu:
         # Print out results in summary form
         print summary
         # Save summary onto report file
-        io.append_to_report(self.report_file, summary)
+        return io.save_report(file_name=file_name, subject_name=self.subject_name, report_header='classification',
+                              line=summary)
+
+    def prompt_gesture_name(self, gesture_src='gestures.txt'):
+        # Prompts user for name of gesture
+        done = False
+
+        while done is False:
+            print("* List of Valid Gestures *")
+            printer.print_numbered_list(self.gesture_list)
+            choice = raw_input("Enter the Gesture Name: ")
+            gesture_name = lower(self.gesture_list[int(choice) - 1])
+            print("\n")
+
+            if gesture_name is not None or gesture_name is not "":
+                done = True
+                return gesture_name
+            else:
+                print("Please try again")
