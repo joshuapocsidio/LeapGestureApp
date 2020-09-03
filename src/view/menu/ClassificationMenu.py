@@ -1,10 +1,10 @@
 import time
+from string import lower
 
 import leapio.LeapIO as io
 import leapio.Printer as printer
 from controller.LeapDataAcquisitor import LeapDataAcquisitor
-from controller.LeapDataTrainer import LeapTrainer
-from string import lower, upper
+from controller.LeapDataTrainer import SVM_Trainer
 
 
 class ClassificationMenu:
@@ -43,7 +43,7 @@ class ClassificationMenu:
 
                 subject_choice = raw_input("Choose subject name: ")
                 self.subject_name = subject_list[int(subject_choice) - 1]
-                print ""
+                print("")
 
                 # Initialise the Acquisitor
                 self.acquisitor = LeapDataAcquisitor(leap_controller=self.leap_controller,
@@ -61,14 +61,14 @@ class ClassificationMenu:
                 done = True
                 pass
             else:
-                print "Please try again."
+                print( "Please try again.")
 
     def single_feature_classification(self):
         # Show files available for classification (pickle files)
         list_data_files = io.get_data_files('.pickle')
         print("* List of Pickle Files *")
         printer.print_numbered_list(list_data_files)
-        print "\n"
+        print("\n")
 
         choice = raw_input("Enter the pickle file for classifier \nPickle Index  : ")
         chosen_pickle = list_data_files[int(choice) - 1]
@@ -83,8 +83,8 @@ class ClassificationMenu:
         chosen_gesture = self.prompt_gesture_name()
 
         # Call data classification functions
-        trainer = LeapTrainer(classifier_name=chosen_pickle_no_extension, kernel_type=kernel_type)
-        trainer.load_classifier(chosen_pickle)
+        trainer = SVM_Trainer(feature_type=chosen_pickle_no_extension, kernel_type=kernel_type)
+        trainer.load(chosen_pickle)
 
         i = 0
         time_list = []
@@ -114,7 +114,7 @@ class ClassificationMenu:
         list_data_files = io.get_data_files('.pickle')
         print("* List of Pickle Files *")
         printer.print_numbered_list(list_data_files)
-        print "\n"
+        print("\n")
 
         # Prompt user for gesture name
         chosen_gesture = self.prompt_gesture_name()
@@ -131,8 +131,8 @@ class ClassificationMenu:
             kernel_type = current_pickle_no_extension.rsplit("_", 1)[-1]
 
             # Create a Leap Data Trainer based on obtained pickle name and kernel type
-            trainer = LeapTrainer(classifier_name=current_pickle_no_extension, kernel_type=kernel_type)
-            trainer.load_classifier(current_pickle)
+            trainer = SVM_Trainer(feature_type=current_pickle_no_extension, kernel_type=kernel_type)
+            trainer.load(current_pickle)
 
             # Append to list of trainers
             trainer_list.append(trainer)
@@ -151,7 +151,7 @@ class ClassificationMenu:
             for trainer in trainer_list:
                 classification_res = self.classify_gesture(
                     kernel_type=trainer.kernel_type,
-                    chosen_pickle_no_extension=trainer.classifier_name,
+                    chosen_pickle_no_extension=trainer.feature_type,
                     chosen_gesture=chosen_gesture,
                     trainer=trainer,
                     time_list=time_dict[trainer],
@@ -174,7 +174,7 @@ class ClassificationMenu:
                 time_list=time_dict[trainer]
             )
 
-        print ""
+        print("")
 
     def classify_gesture(self, kernel_type, chosen_pickle_no_extension, chosen_gesture, trainer, time_list, hand):
         X_data = []
@@ -207,15 +207,15 @@ class ClassificationMenu:
         time_list.append(time_taken)
 
         # Increment correct prediction
-        if lower(prediction[0]) == chosen_gesture:
-            print "------- CORRECT PREDICTION -------"
+        if (prediction[0]) == chosen_gesture:
+            print("------- CORRECT PREDICTION -------")
             res = True
         else:
             print("xxxxxx INCORRECT PREDICTION xxxxxx")
             res = False
 
-        print "Feature Used : " + chosen_pickle_no_extension
-        print "Prediction : " + lower(prediction[0]) + "\n"
+        print("Feature Used : " + chosen_pickle_no_extension)
+        print("Prediction : " + lower(prediction[0]) + "\n")
 
         return res
 
@@ -232,8 +232,8 @@ class ClassificationMenu:
         Incorrect  :    %s
         Result     :    %s / %s
         Accuracy   :    %s %%
-        Avg Time   :    %s seconds\n""" % (str(trainer.classifier_name),
-                                           upper(str(trainer.kernel_type)),
+        Avg Time   :    %s seconds\n""" % (str(trainer.feature_type),
+                                           lower(str(trainer.kernel_type)),
                                            gesture_name,
                                            str(correct_classification),
                                            str(int(self.test_size) - correct_classification),
@@ -244,7 +244,7 @@ class ClassificationMenu:
                                            )
 
         # Print out results in summary form
-        print summary
+        print(summary)
         # Save summary onto report file
         return io.save_report(file_name=file_name, subject_name=self.subject_name, report_header='classification',
                               line=summary)

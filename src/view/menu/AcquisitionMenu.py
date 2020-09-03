@@ -1,7 +1,9 @@
-from controller.LeapDataAcquisitor import LeapDataAcquisitor
+from string import lower
+
 import leapio.LeapIO as io
 import leapio.Printer as printer
-from string import lower
+from controller.LeapDataAcquisitor import LeapDataAcquisitor
+from leapio import Printer
 
 
 def show(controller):
@@ -22,16 +24,7 @@ def show(controller):
         choice = raw_input("Your Choice: ")
 
         if choice != '0' and choice is not None and choice != '':
-            subject_list = io.read_col("subjects.txt")
-            print("------------")
-            print("SUBJECT NAME")
-            print("------------")
-            printer.print_numbered_list(subject_list)
-
-            subject_choice = raw_input("Choose subject name: ")
-            subject_name = subject_list[int(subject_choice) - 1]
-            print ""
-
+            subject_name = prompt_subject_name
             # Initialise the Acquisitor
             acquisitor = LeapDataAcquisitor(leap_controller=controller, subject_name=subject_name)
 
@@ -76,6 +69,25 @@ def show(controller):
         else:
             print("Please try again")
             pass
+
+
+def prompt_subject_name(self):
+    done = False
+    while done is False:
+        print("~ ~ ~ ~ ~ ~ ~ ~ SUBJECT NAMES ~ ~ ~ ~ ~ ~ ~ ~")
+        subjects = io.read_col('subjects.txt')
+        Printer.print_numbered_list(subjects)
+        print("~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~")
+
+        choice = raw_input("Enter the subject name to train from: ")
+
+        if int(choice) > len(subjects) or int(choice) < 1:
+            print("Please try again.")
+        else:
+            subject_name = subjects[int(choice) - 1]
+            print("Chosen Name : " + subject_name)
+            print("")
+            return subject_name
 
 
 def prompt_gesture_name(gesture_src='gestures.txt'):

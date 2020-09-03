@@ -2,7 +2,8 @@ import inspect
 import os
 import sys
 from datetime import date, datetime
-from string import upper, lower
+from string import lower
+
 
 src_dir = os.path.dirname(inspect.getfile(inspect.currentframe()))
 lib_dir = os.path.abspath(os.path.join(src_dir, '../leapLib'))
@@ -138,7 +139,7 @@ def validate_report_file(report_header, subject_name, file_name):
         elif lower(report_header) == 'classification':
             return create_classification_report(subject_name)
         else:
-            print "Invalid Report Heading"
+            print("Invalid Report Heading")
     else:
         return file_name
 

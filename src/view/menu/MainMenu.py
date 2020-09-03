@@ -1,5 +1,6 @@
-from view.menu import AcquisitionMenu, TrainingMenu
+from view.menu import AcquisitionMenu
 from view.menu.ClassificationMenu import ClassificationMenu
+from view.menu.TrainingMenu import TrainingMenu
 
 
 def show(controller):
@@ -17,11 +18,12 @@ def show(controller):
         print("(0) - Exit Program")
 
         choice = raw_input("Your Choice: ")
-
+        print("YOUR INPUT: " + choice)
         if choice == '1':
             AcquisitionMenu.show(controller)
         elif choice == '2':
-            TrainingMenu.show()
+            training_menu = TrainingMenu()
+            training_menu.show()
         elif choice == '3':
             classification_menu = ClassificationMenu(leap_controller=controller)
             classification_menu.show()

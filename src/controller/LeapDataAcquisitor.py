@@ -1,10 +1,11 @@
+import math
+import time
+
 from pip._vendor.distlib.compat import raw_input
 
 from Leap import Bone, Finger
 from leapio import LeapIO
 from model.LeapData import LeapData
-import time
-import math
 
 
 def convert_to_leap_data_set(labels, values):

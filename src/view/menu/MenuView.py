@@ -1,7 +1,4 @@
-import controller.DataOptimizer as Optimizer
-import leapio.Printer as Printer
-from Tkinter import *
-from view.menu import MainMenu, TrainingMenu, ClassificationMenu
+from view.menu import MainMenu
 
 
 def show_ui(controller):  # Calls required functions to show each sub menu
