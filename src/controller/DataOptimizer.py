@@ -172,18 +172,16 @@ def analyze_classifiers(trainer_list, time_list, train_accuracy_list, test_accur
     summary += "ACCURACY(WORST)     : " + \
                str(worst_accuracy) + "% with Training = " + \
                str(worst_train_acc) + "% and Testing = " + \
-               str(worst_test_acc) + "%" + " (" + \
-               str(worst_penalty) + ")\n"
+               str(worst_test_acc) + "%" + " (" + ("" if worst_penalty < 0.0 else "+") + str(worst_penalty) + "%)\n"
     summary += "ACCURACY(BEST)      : " + \
                str(best_accuracy) + "% with Training = " + \
                str(optimal_train_acc) + "% and Testing = " + \
-               str(optimal_test_acc) + "%" + " (" + ["", "+"][optimal_penalty < 0.0] + \
-               str(optimal_penalty) + ")\n"
+               str(optimal_test_acc) + "%" + " (" + ("" if optimal_penalty < 0.0 else "+") + str(optimal_penalty) + "%)\n"
     summary += "ACCURACY(AVERAGE)   : " + str(average_accuracy) + "%\n\n"
 
     summary += "OPTIMAL CLASSIFIER  : Classifier #" + str((index_optimal + 1)) + "\n"
     summary += "OPTIMAL SCORE       : " + str(best_accuracy) + "%\n"
-    summary += "OPTIMAL PENALTY     : " + ["", "+"][optimal_penalty < 0.0] + str(optimal_penalty) + "%\n\n"
+    summary += "OPTIMAL PENALTY     : " + ("" if optimal_penalty < 0.0 else "+") + str(optimal_penalty) + "%\n\n"
 
     summary += " - - - - - - - - HYPER PARAMETERS - - - - - - - - - \n"
     if hasattr(optimal_classifier, 'kernel_type') and hasattr(optimal_classifier, 'kernel_type'):

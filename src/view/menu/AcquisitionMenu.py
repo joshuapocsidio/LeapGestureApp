@@ -1,15 +1,120 @@
-from string import lower
+import sys
+from string import lower, upper
+import time
 
 import leapio.LeapIO as io
 import leapio.Printer as printer
 from controller.LeapDataAcquisitor import LeapDataAcquisitor
 from leapio import Printer
 
-
 def show(controller):
     # Shows menu for data acquisition related menu
     done = False
+    while done is False:
+        print("----------------")
+        print("DATA ACQUISITION")
+        print("----------------")
+        print("(1) - Manual Acquisition")
+        print("(2) - Systematic Acquisition : Training Set")
+        print("(3) - Systematic Acquisition : Testing Set")
+        print("(0) - Back")
 
+        choice = raw_input("Your Choice: ")
+
+        if choice == '1':
+            manual_acquisition(controller=controller)
+            pass
+        elif choice == '2':
+            training_acquisition(controller=controller)
+            pass
+        elif choice == '3':
+            pass
+        elif choice == '0':
+            done = True
+            pass
+        else:
+            print("Please try again.")
+            pass
+    pass
+
+def training_acquisition(controller):
+    print("--------------------")
+    print("TRAINING ACQUISITION")
+    print("--------------------")
+    print("1 --> Counting Gestures (6 Gestures)")
+    print("2 --> Status Gestures (10 Gestures)")
+    print("3 --> American Sign Language (ASL) (26 Gestures)")
+
+    time.sleep(1)
+    # Initialize acquisitor with subject name
+    subject_name = prompt_subject_name()
+    acquisitor = LeapDataAcquisitor(leap_controller=controller, subject_name=subject_name, supervised=False)
+    gesture_src = ['gestures_counting.txt', 'gestures_status.txt', 'gestures_asl.txt']
+    gesture_titles = ['Counting Gestures', 'Status Gestures', 'American Sign Language Gestures']
+    hand_config = ['LEFT HAND', 'RIGHT HAND']
+    lighting_config = ['WELL LIT ENVIRONMENT', 'DIMLY LIT ENVIRONMENT']
+
+    # Change this between sessions
+    cur_lighting = lighting_config[0]
+
+    i_src = 0
+    while i_src < len(gesture_src):
+        print("* * * * * * * * " + gesture_titles[i_src] + "* * * * * * * * ")
+        # Obtain gestures from file
+        gesture_list = io.read_col(gesture_src[i_src])
+
+        # Loop between gestures
+        i_ges = 0
+        while i_ges < len(gesture_list):
+            cur_gesture = gesture_list[i_ges]
+
+            # Loop between hands
+            i_hand = 0
+            while i_hand < len(hand_config):
+                print("Acquiring Gesture : " + upper(cur_gesture) + " --> " + hand_config[i_hand] + " ")
+
+                # Loop between each gesture data taken
+                print("\rProgress ----> " + str(0) + "/50 acquired"),
+                raw_input("\nSystem       :       Press any key to get data: "),
+                time.sleep(2)
+                n_taken = 0
+                # raw_input("\rSystem       :       Valid hand(s) detected --> Press any key to get data: \r"),
+                while n_taken < 50:
+                    # Acquire data
+                    acquisitor.get_all_hand_feature_type(gesture_name=cur_gesture)
+                    n_taken += 1
+                    print("\rProgress ----> " + str(n_taken) + "/50 acquired"),
+
+                    if n_taken % 10 == 0:
+                        if n_taken == 50:
+                            raw_input("\nSystem       :       Gesture Checkpoint reached. Press any key to continue"),
+                        else:
+                            raw_input("\nSystem       :       Press any key to get data: "),
+                    pass
+
+                print(" -- SUCCESS!\n")
+                i_hand += 1
+                pass
+
+            i_ges += 1
+            pass
+
+        i_src += 1
+        pass
+
+    print("")
+    print("* * * * Counting Gestures * * * *")
+    print("Acquiring Gesture : Five")
+
+    pass
+
+def testing_acquisition(controller):
+    pass
+
+
+def manual_acquisition(controller):
+    done = False
+    acquisitor = None
     while done is False:
         print("----------------")
         print("DATA ACQUISITION")
@@ -24,7 +129,7 @@ def show(controller):
         choice = raw_input("Your Choice: ")
 
         if choice != '0' and choice is not None and choice != '':
-            subject_name = prompt_subject_name
+            subject_name = prompt_subject_name()
             # Initialise the Acquisitor
             acquisitor = LeapDataAcquisitor(leap_controller=controller, subject_name=subject_name)
 
@@ -71,7 +176,7 @@ def show(controller):
             pass
 
 
-def prompt_subject_name(self):
+def prompt_subject_name():
     done = False
     while done is False:
         print("~ ~ ~ ~ ~ ~ ~ ~ SUBJECT NAMES ~ ~ ~ ~ ~ ~ ~ ~")
@@ -90,7 +195,7 @@ def prompt_subject_name(self):
             return subject_name
 
 
-def prompt_gesture_name(gesture_src='gestures.txt'):
+def prompt_gesture_name(gesture_src='gestures_asl.txt'):
     # Prompts user for name of gesture
     done = False
 
@@ -102,12 +207,12 @@ def prompt_gesture_name(gesture_src='gestures.txt'):
         gesture_name = lower(gesture_list[int(choice) - 1])
         print("")
 
-        if gesture_name is not None or gesture_name is not "":
-            done = True
-            return gesture_name
-        else:
-            print("Please try again")
+        num_choice = int(choice)
 
+        if num_choice < 1 and num_choice > len(gesture_list):
+            print("Please try again")
+        else:
+            return gesture_name
 
 def prompt_iterations():
     # Prompts user for number of iterations

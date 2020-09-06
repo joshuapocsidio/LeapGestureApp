@@ -2,7 +2,8 @@ import inspect
 import os
 import sys
 from datetime import date, datetime
-from string import lower
+from string import lower, rsplit
+import pickle
 
 
 src_dir = os.path.dirname(inspect.getfile(inspect.currentframe()))
@@ -11,7 +12,11 @@ sys.path.insert(0, lib_dir)
 
 con_dir = os.path.dirname(os.getcwd()) + "\config\\"
 out_dir = os.path.dirname(os.getcwd()) + "\output\\"
+
 dat_dir = out_dir + "data\\"
+trd_dir = dat_dir + "trained_data\\"
+sca_dir = dat_dir + "standard_scales\\"
+
 sum_dir = out_dir + "summary\\"
 tra_dir = sum_dir + "training\\"
 cla_dir = sum_dir + "classification\\"
@@ -38,8 +43,10 @@ def save_data(file_name, subject_name, gesture_name, data_set):
     append_to_data_file(gesture_name=gesture_name, file_name=file_name, data_set=value_list)
 
 
-def create_data_file(file_name, labels):
-    print("System       :       Creating Data File " + file_name)
+def create_data_file(file_name, labels, verbose=False):
+    if verbose is True:
+        print("System       :       Creating Data File " + file_name)
+
     writer = open(file_name, 'w')
 
     writer.write(",".join(labels))
@@ -47,9 +54,10 @@ def create_data_file(file_name, labels):
     writer.close()
 
 
-def append_to_data_file(gesture_name, file_name, data_set):
+def append_to_data_file(gesture_name, file_name, data_set, verbose=False):
     if gesture_name is not None and file_name is not None:
-        print("System       :       Appending Data File " + file_name)
+        if verbose is True:
+            print("System       :       Appending Data File " + file_name)
         values = []
 
         # Change list to string data
@@ -64,6 +72,35 @@ def append_to_data_file(gesture_name, file_name, data_set):
         writer.write('\n')
         writer.close()
 
+
+def save_classifier(pickle_name, data):
+    file_path = trd_dir + pickle_name
+    print("Saving Classifier : " + str(file_path))
+    pickle_file = open(file_path, 'wb')
+    pickle.dump(data, pickle_file)
+    pickle_file.close()
+    pass
+
+def load_classifier(pickle_name):
+    file_path = trd_dir + rsplit(pickle_name, "\\")[-1]
+    print("Saving Classifier : " + str(file_path))
+    pickle_file = open(file_path, 'rb')
+    data = pickle.load(pickle_file)
+    return data
+
+def save_scale(pickle_name, data):
+    file_path = sca_dir + pickle_name
+    print("Saving Scale      : " + str(file_path))
+    pickle_file = open(file_path, 'wb')
+    pickle.dump(data, pickle_file)
+    pickle_file.close()
+
+def load_scale(pickle_name):
+    file_path = sca_dir + rsplit(pickle_name, "\\")[-1]
+    print("Loading Scale     : " + str(file_path))
+    pickle_file = open(file_path, 'rb')
+    data = pickle.load(pickle_file)
+    return data
 
 # SUMMARY FUNCTIONS
 def save_report(subject_name, report_header, line, file_name=None):
@@ -117,15 +154,17 @@ def create_classification_report(subject_name):
 
 
 # VALIDATION FUNCTIONS
-def validate_data_file(file_name, labels):
+def validate_data_file(file_name, labels, verbose=False):
     invalid = False
 
     if does_file_exist(file_name):
         if not do_parameters_match(file_name=file_name, labels=labels):
-            print("System       :       Parameters do not match - creating a new file")
+            if verbose is True:
+                print("System       :       Parameters do not match - creating a new file")
             invalid = True
     else:
-        print("System       :       Specified file name does not exist - creating a new file")
+        if verbose is True:
+            print("System       :       Specified file name does not exist - creating a new file")
         invalid = True
 
     if invalid is True:  # Only create file if specified file is invalid
@@ -200,8 +239,8 @@ def create_gesture_database(file_name):
 
 
 # Returns all file names inside current directory (or given directory if omitted) with matching extension
-def get_data_files(extension):
-    directory = dat_dir
+def get_data_files(directory=dat_dir):
+    extension = '.csv'
     data_file_names = []
     for file_name in os.listdir(directory):
         file_name = directory + file_name
@@ -209,6 +248,20 @@ def get_data_files(extension):
             data_file_names.append(file_name)
 
     return data_file_names
+
+
+def get_pickle_files(directory=trd_dir):
+    extension = '.pickle'
+    pickle_file_names = []
+
+    print("DIRECTORY : " + directory)
+    for file_name in os.listdir(directory):
+        file_name = directory + file_name
+        if file_name.endswith(extension):
+            pickle_file_names.append(file_name)
+
+    return pickle_file_names
+
 
 
 def read_row(file_name, index=0, delimiter=','):

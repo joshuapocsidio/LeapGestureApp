@@ -1,5 +1,4 @@
 import pickle
-
 import numpy as np
 import pandas as pd
 from sklearn import model_selection
@@ -7,6 +6,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.neural_network import MLPClassifier
 from sklearn.model_selection import GridSearchCV
 from sklearn.svm import SVC
+import leapio.LeapIO as io
 
 
 class Trainer:
@@ -17,20 +17,33 @@ class Trainer:
         self.feature_type = feature_type
         self.training_acc = 0.0
         self.testing_acc = 0.0
+        self.std_scale = None
         pass
 
     def save(self, pickle_name):
-        pickle_file = open(pickle_name, 'wb')
-        pickle.dump(self.classifier, pickle_file)
+        io.save_classifier(pickle_name=pickle_name, data=self.classifier)
+        io.save_scale(pickle_name=pickle_name, data=self.std_scale)
         pass
 
     def load(self, pickle_name):
-        pickle_file = open(pickle_name, 'rb')
-        self.classifier = pickle.load(pickle_file)
+        self.classifier = io.load_classifier(pickle_name=pickle_name)
+        self.std_scale = io.load_scale(pickle_name)
+        ''' UNCOMMENT FOR DEBUGGING
+        # print self.classifier
+        # print self.std_scale
+        '''
+
+        pass
 
     def classify(self, X):
+        X = self.std_scale.transform(X)
         prediction = self.classifier.predict(X)
-        print("DECISION FUNCTION : ", self.classifier.decision_function(X))
+
+        ''' UNCOMMENT FOR DEBUGGING
+        # print("SCALED : " + str(X))
+        # print(self.classifier.predict_log_proba(X))
+        # print(self.classifier.decision_function(X))
+        '''
         return prediction
 
     def get_normalized_data(self, csv_file):
@@ -52,12 +65,33 @@ class Trainer:
 
     def _normalize_data(self, train_data, test_data):
         # Normalize data with standard scaler
-        std_scale = StandardScaler()
-        std_scale.fit(train_data)
-        X_train = std_scale.transform(train_data)
-        X_test = std_scale.transform(test_data)
+        self.std_scale = StandardScaler()
+        self.std_scale.fit(train_data)
+        X_train = self.std_scale.transform(train_data)
+        X_test = self.std_scale.transform(test_data)
 
         return X_train, X_test
+
+class DT_Trainer(Trainer):
+    def __init__(self, subject_name, feature_type, classifier_name):
+        Trainer.__init__(
+            self,
+            subject_name,
+            classifier_name,
+            feature_type
+        )
+        pass
+
+
+class RF_Trainer(Trainer):
+    def __init__(self, subject_name, feature_type, classifier_name):
+        Trainer.__init__(
+            self,
+            subject_name,
+            classifier_name,
+            feature_type
+        )
+        pass
 
 
 class NN_Trainer(Trainer):
@@ -96,13 +130,17 @@ class NN_Trainer(Trainer):
             'hidden_layer_sizes': [(64,), (128,), (64, 64,), (128, 128,), (64, 128, 128, 64)]
         }
         # Initialize hyper parameter tuning grid search
-        grid_classifier = GridSearchCV(classifier, grid_parameters, n_jobs=6, cv=5)
+        grid_classifier = GridSearchCV(classifier, grid_parameters, n_jobs=4, cv=5)
         # Fit the model
         grid_classifier.fit(X_train, y_train)
 
         self.training_acc = grid_classifier.best_score_
         self.testing_acc = grid_classifier.score(X_test, y_test)
-        self.classifier = classifier
+        self.classifier = grid_classifier.best_estimator_
+
+        self.classifier.fit(X_train, y_train)
+
+        # Hyper Parameters
         self.n_layers = len(grid_classifier.best_params_['hidden_layer_sizes'])
         self.n_layer_nodes = grid_classifier.best_params_['hidden_layer_sizes']
         self.learning_rate = grid_classifier.best_params_['learning_rate_init']
@@ -110,7 +148,7 @@ class NN_Trainer(Trainer):
 
     def save_classifier(self):
         pickle_name = "(" + self.subject_name + ") NN_" + self.feature_type + "_" + self.activation + "_" + self.optimizer + ".pickle"
-        print("Saving in : " + pickle_name)
+        # print("Saving in : " + pickle_name)
         self.save(pickle_name=pickle_name)
         pass
 
@@ -146,12 +184,16 @@ class SVM_Trainer(Trainer):
 
         self.training_acc = grid_classifier.best_score_
         self.testing_acc = grid_classifier.score(X_test, y_test)
-        self.classifier = classifier
+        self.classifier = grid_classifier.best_estimator_
+        self.classifier.fit(X_train, y_train)
+        # print(self.classifier.score(X_test, y_test))
+
+        # Hyper Parameters
         self.c_param = grid_classifier.best_params_['C']
         pass
 
     def save_classifier(self):
         pickle_name = "(" + self.subject_name + ") SVM_" + self.feature_type + "_" + self.kernel_type + ".pickle"
-        print("Saving in : " + pickle_name)
+        # print("Saving in : " + pickle_name)
         self.save(pickle_name=pickle_name)
         pass

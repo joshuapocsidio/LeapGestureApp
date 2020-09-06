@@ -71,7 +71,7 @@ class TrainingMenu:
                 pass
 
     def single_training(self):
-        data_files = io.get_data_files('.csv')
+        data_files = io.get_data_files()
 
         print("")
         print("~ ~ ~ ~ ~ ~ ~ ~ LIST OF DATA SOURCE ~ ~ ~ ~ ~ ~ ~ ~")
@@ -79,10 +79,14 @@ class TrainingMenu:
         print("~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~")
 
         choice = raw_input("Enter the data set to train from: ")
-        csv_file = data_files[int(choice) - 1]
-        print("Chosen File : " + csv_file)
+        data_file = data_files[int(choice) - 1]
+        print("Chosen File : " + data_file)
         print("")
 
+        subject_name = data_file.rsplit("(", 1)[1].rsplit(")")[0]
+        feature_type = strip(data_file.rsplit(")")[1].rsplit(".")[0])
+
+        file_name = None
         if self.classifier_type == 'svm':
             kernel_list = io.read_col("kernels.txt")
             print("* List of Kernels *")
@@ -91,27 +95,37 @@ class TrainingMenu:
             self.kernel_type = kernel_list[int(choice) - 1]
             print("Chosen Kernel : " + self.kernel_type)
             print("")
-
-        self.train_auto(csv_file=csv_file)
+            training_summary = self.train_auto(csv_file=data_file, subject_name=subject_name, feature_type=feature_type)
+            file_name = io.save_report(file_name=file_name, subject_name=subject_name, report_header='training',
+                                       line=training_summary)
+        elif self.classifier_type == 'nn':
+            activations = ['relu', 'logistic']
+            optimizers = ['adam', 'sgd']
+            for activation in activations:
+                self.activation = activation
+                for optimizer in optimizers:
+                    self.optimizer = optimizer
+                    training_summary = self.train_auto(csv_file=data_file, subject_name=subject_name, feature_type=feature_type)
+                    file_name = io.save_report(file_name=file_name, subject_name=subject_name, report_header='training',
+                                               line=training_summary)
         pass
 
     def multi_training(self):
-        data_files = io.get_data_files('.csv')
+        data_files = io.get_data_files()
         kernel_list = io.read_col("kernels.txt")
+        file_name = None
 
         print("")
         "* List of Data Files to Train *"
         Printer.print_numbered_list(data_files)
         print("")
 
+        # SVM Multi Training
         if self.classifier_type == 'svm':
             "* List of Kernels for Training *"
             Printer.print_numbered_list(kernel_list)
             print("")
 
-        file_name = None
-        # SVM Multi Training
-        if self.classifier_type == 'svm':
             for data_file in data_files:
                 subject_name = data_file.rsplit("(", 1)[1].rsplit(")")[0]
                 feature_type = strip(data_file.rsplit(")")[1].rsplit(".")[0])

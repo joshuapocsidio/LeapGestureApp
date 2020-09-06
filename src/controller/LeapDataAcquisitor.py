@@ -21,11 +21,13 @@ def convert_to_leap_data_set(labels, values):
 
 
 class LeapDataAcquisitor:
-    def __init__(self, leap_controller, subject_name):
+    def __init__(self, leap_controller, subject_name, verbose=False, supervised=True):
         self.leap_controller = leap_controller
         self.subject_name = subject_name
+        self.verbose = verbose
+        self.supervised = supervised
 
-    def get_palm_to_finger_distance_set(self, gesture_name, iterations=1, hand=None, return_mode=False):
+    def get_palm_to_finger_distance_set(self, gesture_name="", iterations=1, hand=None, return_mode=False):
         # Initialize name of the file and labels
         file_name = 'finger-to-palm-distance'
         labels = ["thumb", "index", "middle", "ring", "pinky"]
@@ -225,46 +227,70 @@ class LeapDataAcquisitor:
 
             i += 1
 
+    def sample_hand_data(self):
+        # Sample 100 frames hand data
+        data_list = []
+        while len(data_list) < 100:
+            data_list.append(self.get_palm_to_finger_distance_set(return_mode=True))
+            time.sleep(0.001)
+
+        return data_list
+
     def get_hand_data(self):
         done = False
-
-        while done is False:
-            # Only do stuff if controller is connected
-            if self.leap_controller.is_connected:
-                print("System       :       Leap Controller is Connected")
-
-                # Obtain current hands from current frame
-                hands = self.leap_controller.frame().hands
-
-                # Only attempt to obtain hands data if there is a hand
-                if self.is_data_valid():
+        hand = None
+        if self.supervised is True:
+            while done is False:
+                if self.supervised_data_validation() is True:
                     hand = self.leap_controller.frame().hands[0]
-
                     if hand is not None:
                         done = True
-                        return hand
                 time.sleep(1)
-        pass
+            pass
+        else:
+            while done is False:
+                is_valid, hand = self.unsupervised_data_validation()
+                if is_valid is True:
+                    done = True
+                    time.sleep(0.2)
+            pass
+        return hand
 
-    def is_data_valid(self):
+    def supervised_data_validation(self):
         is_valid = False
+        # Only do stuff if controller is connected
+        if self.leap_controller.is_connected:
+            hands = self.leap_controller.frame().hands
+            # Keep only if there is a hand
+            if len(hands) > 0:
+                if self.supervised is True:
+                    # Give user control when to obtain data
+                    raw_input("\rSystem       :       Valid hand(s) detected --> Press any key to get data: "),
+                    # Get the latest frame again
+                    hands = self.leap_controller.frame().hands
+
+                    if len(hands) > 0:
+                        is_valid = True
+                    else:
+                        print("\rSystem       :       Previously detected hand is not visible - Please try again"),
+                else:
+                    hands = self.leap_controller.frame().hands
+                    if len(hands) > 0:
+                        is_valid = True
+            else:
+                print("\rSystem       :       No hand(s) detected - Please try again"),
+        return is_valid
+
+    def unsupervised_data_validation(self):
         if self.leap_controller.is_connected:
             hands = self.leap_controller.frame().hands
 
-            # Keep only if there is a hand
             if len(hands) > 0:
-                print("System       :       Valid hand(s) detected")
-
-                # Give user control when to obtain data
-                raw_input("Press any key to get data: ")
-
-                # Get the latest frame again
-                hands = self.leap_controller.frame().hands
-
-                if len(hands) > 0:
-                    is_valid = True
-                else:
-                    print("System       :       Previously detected hand is not visible - Please try again")
+                hand = hands[0]
+                return True, hand
             else:
-                print("System       :       No hand(s) detected - Please try again")
-        return is_valid
+                return False, None
+        else:
+            return False, None
+
+

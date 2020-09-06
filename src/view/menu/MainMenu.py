@@ -1,4 +1,4 @@
-from view.menu import AcquisitionMenu
+from view.menu import AcquisitionMenu, RecognitionMenu
 from view.menu.ClassificationMenu import ClassificationMenu
 from view.menu.TrainingMenu import TrainingMenu
 
@@ -28,6 +28,7 @@ def show(controller):
             classification_menu = ClassificationMenu(leap_controller=controller)
             classification_menu.show()
         elif choice == '4':
+            recognition_menu = RecognitionMenu.show(leap_controller=controller)
             pass
         elif choice == '0':
             # Shows GUI for exiting the program
