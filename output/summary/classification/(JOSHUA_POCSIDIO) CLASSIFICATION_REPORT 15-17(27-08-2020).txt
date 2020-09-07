@@ -1,0 +1,128 @@
+____________________________________________________________________________________________________________________________________________________________________________________________________
+        Classifier :    C:\Users\Joshua Pocsidio\Desktop\Joshua Pocsidio\Programming\PyCharm\LeapGestureApp\output\data\(JOSHUA_POCSIDIO) finger-angle-and-palm-distance_linear (LINEAR)
+        Correct    :    5
+        Incorrect  :    0
+        Result     :    5 / 5
+        Accuracy   :    100.0 %
+        Avg Time   :    0.00079992 seconds
+
+____________________________________________________________________________________________________________________________________________________________________________________________________
+        Classifier :    C:\Users\Joshua Pocsidio\Desktop\Joshua Pocsidio\Programming\PyCharm\LeapGestureApp\output\data\(JOSHUA_POCSIDIO) finger-angle-and-palm-distance_poly (POLY)
+        Correct    :    5
+        Incorrect  :    0
+        Result     :    5 / 5
+        Accuracy   :    100.0 %
+        Avg Time   :    0.00100002 seconds
+
+____________________________________________________________________________________________________________________________________________________________________________________________________
+        Classifier :    C:\Users\Joshua Pocsidio\Desktop\Joshua Pocsidio\Programming\PyCharm\LeapGestureApp\output\data\(JOSHUA_POCSIDIO) finger-angle-and-palm-distance_rbf (RBF)
+        Correct    :    0
+        Incorrect  :    5
+        Result     :    0 / 5
+        Accuracy   :    0.0 %
+        Avg Time   :    0.0012 seconds
+
+____________________________________________________________________________________________________________________________________________________________________________________________________
+        Classifier :    C:\Users\Joshua Pocsidio\Desktop\Joshua Pocsidio\Programming\PyCharm\LeapGestureApp\output\data\(JOSHUA_POCSIDIO) finger-angle-and-palm-distance_sigmoid (SIGMOID)
+        Correct    :    5
+        Incorrect  :    0
+        Result     :    5 / 5
+        Accuracy   :    100.0 %
+        Avg Time   :    0.00100008 seconds
+
+____________________________________________________________________________________________________________________________________________________________________________________________________
+        Classifier :    C:\Users\Joshua Pocsidio\Desktop\Joshua Pocsidio\Programming\PyCharm\LeapGestureApp\output\data\(JOSHUA_POCSIDIO) finger-angle-using-bones_linear (LINEAR)
+        Correct    :    5
+        Incorrect  :    0
+        Result     :    5 / 5
+        Accuracy   :    100.0 %
+        Avg Time   :    0.0011999 seconds
+
+____________________________________________________________________________________________________________________________________________________________________________________________________
+        Classifier :    C:\Users\Joshua Pocsidio\Desktop\Joshua Pocsidio\Programming\PyCharm\LeapGestureApp\output\data\(JOSHUA_POCSIDIO) finger-angle-using-bones_poly (POLY)
+        Correct    :    5
+        Incorrect  :    0
+        Result     :    5 / 5
+        Accuracy   :    100.0 %
+        Avg Time   :    0.00080004 seconds
+
+____________________________________________________________________________________________________________________________________________________________________________________________________
+        Classifier :    C:\Users\Joshua Pocsidio\Desktop\Joshua Pocsidio\Programming\PyCharm\LeapGestureApp\output\data\(JOSHUA_POCSIDIO) finger-angle-using-bones_rbf (RBF)
+        Correct    :    0
+        Incorrect  :    5
+        Result     :    0 / 5
+        Accuracy   :    0.0 %
+        Avg Time   :    0.00099996 seconds
+
+____________________________________________________________________________________________________________________________________________________________________________________________________
+        Classifier :    C:\Users\Joshua Pocsidio\Desktop\Joshua Pocsidio\Programming\PyCharm\LeapGestureApp\output\data\(JOSHUA_POCSIDIO) finger-angle-using-bones_sigmoid (SIGMOID)
+        Correct    :    0
+        Incorrect  :    5
+        Result     :    0 / 5
+        Accuracy   :    0.0 %
+        Avg Time   :    0.00060006 seconds
+
+____________________________________________________________________________________________________________________________________________________________________________________________________
+        Classifier :    C:\Users\Joshua Pocsidio\Desktop\Joshua Pocsidio\Programming\PyCharm\LeapGestureApp\output\data\(JOSHUA_POCSIDIO) finger-between-distance_linear (LINEAR)
+        Correct    :    5
+        Incorrect  :    0
+        Result     :    5 / 5
+        Accuracy   :    100.0 %
+        Avg Time   :    0.0006 seconds
+
+____________________________________________________________________________________________________________________________________________________________________________________________________
+        Classifier :    C:\Users\Joshua Pocsidio\Desktop\Joshua Pocsidio\Programming\PyCharm\LeapGestureApp\output\data\(JOSHUA_POCSIDIO) finger-between-distance_poly (POLY)
+        Correct    :    5
+        Incorrect  :    0
+        Result     :    5 / 5
+        Accuracy   :    100.0 %
+        Avg Time   :    0.00059994 seconds
+
+____________________________________________________________________________________________________________________________________________________________________________________________________
+        Classifier :    C:\Users\Joshua Pocsidio\Desktop\Joshua Pocsidio\Programming\PyCharm\LeapGestureApp\output\data\(JOSHUA_POCSIDIO) finger-between-distance_rbf (RBF)
+        Correct    :    0
+        Incorrect  :    5
+        Result     :    0 / 5
+        Accuracy   :    0.0 %
+        Avg Time   :    0.00079998 seconds
+
+____________________________________________________________________________________________________________________________________________________________________________________________________
+        Classifier :    C:\Users\Joshua Pocsidio\Desktop\Joshua Pocsidio\Programming\PyCharm\LeapGestureApp\output\data\(JOSHUA_POCSIDIO) finger-between-distance_sigmoid (SIGMOID)
+        Correct    :    5
+        Incorrect  :    0
+        Result     :    5 / 5
+        Accuracy   :    100.0 %
+        Avg Time   :    0.0006 seconds
+
+____________________________________________________________________________________________________________________________________________________________________________________________________
+        Classifier :    C:\Users\Joshua Pocsidio\Desktop\Joshua Pocsidio\Programming\PyCharm\LeapGestureApp\output\data\(JOSHUA_POCSIDIO) finger-to-palm-distance_linear (LINEAR)
+        Correct    :    5
+        Incorrect  :    0
+        Result     :    5 / 5
+        Accuracy   :    100.0 %
+        Avg Time   :    0.00040002 seconds
+
+____________________________________________________________________________________________________________________________________________________________________________________________________
+        Classifier :    C:\Users\Joshua Pocsidio\Desktop\Joshua Pocsidio\Programming\PyCharm\LeapGestureApp\output\data\(JOSHUA_POCSIDIO) finger-to-palm-distance_poly (POLY)
+        Correct    :    5
+        Incorrect  :    0
+        Result     :    5 / 5
+        Accuracy   :    100.0 %
+        Avg Time   :    0.00120006 seconds
+
+____________________________________________________________________________________________________________________________________________________________________________________________________
+        Classifier :    C:\Users\Joshua Pocsidio\Desktop\Joshua Pocsidio\Programming\PyCharm\LeapGestureApp\output\data\(JOSHUA_POCSIDIO) finger-to-palm-distance_rbf (RBF)
+        Correct    :    1
+        Incorrect  :    4
+        Result     :    1 / 5
+        Accuracy   :    20.0 %
+        Avg Time   :    0.00080004 seconds
+
+____________________________________________________________________________________________________________________________________________________________________________________________________
+        Classifier :    C:\Users\Joshua Pocsidio\Desktop\Joshua Pocsidio\Programming\PyCharm\LeapGestureApp\output\data\(JOSHUA_POCSIDIO) finger-to-palm-distance_sigmoid (SIGMOID)
+        Correct    :    5
+        Incorrect  :    0
+        Result     :    5 / 5
+        Accuracy   :    100.0 %
+        Avg Time   :    0.00079992 seconds
+

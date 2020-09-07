@@ -1,0 +1,9 @@
+____________________________________________________________________________________________________________________________________________________________________________________________________
+        Classifier :    C:\Users\Joshua Pocsidio\Desktop\Joshua Pocsidio\Programming\PyCharm\LeapGestureApp\output\data\trained_data\(JOSHUA_POCSIDIO) SVM_finger-to-palm-distance_linear (linear)
+        Gesture    :    fist
+        Correct    :    0
+        Incorrect  :    5
+        Result     :    0 / 5
+        Accuracy   :    0.0 %
+        Avg Time   :    0.0009999 seconds
+

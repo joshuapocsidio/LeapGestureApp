@@ -1,0 +1,400 @@
+* * * * * * * * * *
+SUMMARY REPORT
+* * * * * * * * * *
+CLASSIFIER          : Support Vector Machine
+FEATURE TYPE        : finger-angle-and-palm-distance
+
+TIME(TOTAL)         : 8.204 seconds 
+TIME(WORST)         : 3.616 seconds 
+TIME(BEST)          : 0.405 seconds 
+TIME(AVERAGE)       : 0.8204 seconds
+
+ACCURACY(WORST)     : 84.783% with Training = 87.313% and Testing = 84.783% (-2.53%)
+ACCURACY(BEST)      : 90.435% with Training = 83.396% and Testing = 90.435% (+7.039%)
+ACCURACY(AVERAGE)   : 87.1306%
+
+OPTIMAL CLASSIFIER  : Classifier #2
+OPTIMAL SCORE       : 90.435%
+OPTIMAL PENALTY     : +7.039%
+
+ - - - - - - - - HYPER PARAMETERS - - - - - - - - - 
+KERNEL              : linear
+C_PARAM             : 10.0
+
+* * * * * * * * * *
+
+* * * * * * * * * *
+SUMMARY REPORT
+* * * * * * * * * *
+CLASSIFIER          : Support Vector Machine
+FEATURE TYPE        : finger-angle-and-palm-distance
+
+TIME(TOTAL)         : 3.559 seconds 
+TIME(WORST)         : 0.396 seconds 
+TIME(BEST)          : 0.308 seconds 
+TIME(AVERAGE)       : 0.3559 seconds
+
+ACCURACY(WORST)     : 82.174% with Training = 88.619% and Testing = 82.174% (-6.445%)
+ACCURACY(BEST)      : 89.565% with Training = 84.888% and Testing = 89.565% (+4.677%)
+ACCURACY(AVERAGE)   : 86.174%
+
+OPTIMAL CLASSIFIER  : Classifier #6
+OPTIMAL SCORE       : 89.565%
+OPTIMAL PENALTY     : +4.677%
+
+ - - - - - - - - HYPER PARAMETERS - - - - - - - - - 
+KERNEL              : poly
+C_PARAM             : 10.0
+
+* * * * * * * * * *
+
+* * * * * * * * * *
+SUMMARY REPORT
+* * * * * * * * * *
+CLASSIFIER          : Support Vector Machine
+FEATURE TYPE        : finger-angle-and-palm-distance
+
+TIME(TOTAL)         : 3.631 seconds 
+TIME(WORST)         : 0.454 seconds 
+TIME(BEST)          : 0.332 seconds 
+TIME(AVERAGE)       : 0.3631 seconds
+
+ACCURACY(WORST)     : 87.826% with Training = 92.537% and Testing = 87.826% (-4.711%)
+ACCURACY(BEST)      : 94.783% with Training = 88.619% and Testing = 94.783% (+6.164%)
+ACCURACY(AVERAGE)   : 90.5217%
+
+OPTIMAL CLASSIFIER  : Classifier #9
+OPTIMAL SCORE       : 94.783%
+OPTIMAL PENALTY     : +6.164%
+
+ - - - - - - - - HYPER PARAMETERS - - - - - - - - - 
+KERNEL              : rbf
+C_PARAM             : 10.0
+
+* * * * * * * * * *
+
+* * * * * * * * * *
+SUMMARY REPORT
+* * * * * * * * * *
+CLASSIFIER          : Support Vector Machine
+FEATURE TYPE        : finger-angle-and-palm-distance
+
+TIME(TOTAL)         : 4.802 seconds 
+TIME(WORST)         : 0.58 seconds 
+TIME(BEST)          : 0.388 seconds 
+TIME(AVERAGE)       : 0.4802 seconds
+
+ACCURACY(WORST)     : 60.435% with Training = 65.112% and Testing = 60.435% (-4.677%)
+ACCURACY(BEST)      : 76.957% with Training = 64.366% and Testing = 76.957% (+12.591%)
+ACCURACY(AVERAGE)   : 70.3914%
+
+OPTIMAL CLASSIFIER  : Classifier #1
+OPTIMAL SCORE       : 76.957%
+OPTIMAL PENALTY     : +12.591%
+
+ - - - - - - - - HYPER PARAMETERS - - - - - - - - - 
+KERNEL              : sigmoid
+C_PARAM             : 0.1
+
+* * * * * * * * * *
+
+* * * * * * * * * *
+SUMMARY REPORT
+* * * * * * * * * *
+CLASSIFIER          : Support Vector Machine
+FEATURE TYPE        : finger-angle-using-bones
+
+TIME(TOTAL)         : 4.33 seconds 
+TIME(WORST)         : 0.515 seconds 
+TIME(BEST)          : 0.346 seconds 
+TIME(AVERAGE)       : 0.433 seconds
+
+ACCURACY(WORST)     : 79.565% with Training = 85.261% and Testing = 79.565% (-5.696%)
+ACCURACY(BEST)      : 91.739% with Training = 89.552% and Testing = 91.739% (+2.187%)
+ACCURACY(AVERAGE)   : 86.3042%
+
+OPTIMAL CLASSIFIER  : Classifier #1
+OPTIMAL SCORE       : 91.739%
+OPTIMAL PENALTY     : +2.187%
+
+ - - - - - - - - HYPER PARAMETERS - - - - - - - - - 
+KERNEL              : linear
+C_PARAM             : 10.0
+
+* * * * * * * * * *
+
+* * * * * * * * * *
+SUMMARY REPORT
+* * * * * * * * * *
+CLASSIFIER          : Support Vector Machine
+FEATURE TYPE        : finger-angle-using-bones
+
+TIME(TOTAL)         : 3.667 seconds 
+TIME(WORST)         : 0.398 seconds 
+TIME(BEST)          : 0.332 seconds 
+TIME(AVERAGE)       : 0.3667 seconds
+
+ACCURACY(WORST)     : 84.348% with Training = 86.754% and Testing = 84.348% (-2.406%)
+ACCURACY(BEST)      : 90.435% with Training = 87.313% and Testing = 90.435% (+3.122%)
+ACCURACY(AVERAGE)   : 86.7827%
+
+OPTIMAL CLASSIFIER  : Classifier #4
+OPTIMAL SCORE       : 90.435%
+OPTIMAL PENALTY     : +3.122%
+
+ - - - - - - - - HYPER PARAMETERS - - - - - - - - - 
+KERNEL              : poly
+C_PARAM             : 10.0
+
+* * * * * * * * * *
+
+* * * * * * * * * *
+SUMMARY REPORT
+* * * * * * * * * *
+CLASSIFIER          : Support Vector Machine
+FEATURE TYPE        : finger-angle-using-bones
+
+TIME(TOTAL)         : 3.365 seconds 
+TIME(WORST)         : 0.362 seconds 
+TIME(BEST)          : 0.311 seconds 
+TIME(AVERAGE)       : 0.3365 seconds
+
+ACCURACY(WORST)     : 90.0% with Training = 90.299% and Testing = 90.0% (-0.299%)
+ACCURACY(BEST)      : 96.522% with Training = 88.806% and Testing = 96.522% (+7.716%)
+ACCURACY(AVERAGE)   : 92.5652%
+
+OPTIMAL CLASSIFIER  : Classifier #8
+OPTIMAL SCORE       : 96.522%
+OPTIMAL PENALTY     : +7.716%
+
+ - - - - - - - - HYPER PARAMETERS - - - - - - - - - 
+KERNEL              : rbf
+C_PARAM             : 10.0
+
+* * * * * * * * * *
+
+* * * * * * * * * *
+SUMMARY REPORT
+* * * * * * * * * *
+CLASSIFIER          : Support Vector Machine
+FEATURE TYPE        : finger-angle-using-bones
+
+TIME(TOTAL)         : 4.053 seconds 
+TIME(WORST)         : 0.431 seconds 
+TIME(BEST)          : 0.375 seconds 
+TIME(AVERAGE)       : 0.4053 seconds
+
+ACCURACY(WORST)     : 74.348% with Training = 79.104% and Testing = 74.348% (-4.756%)
+ACCURACY(BEST)      : 79.13% with Training = 77.052% and Testing = 79.13% (+2.078%)
+ACCURACY(AVERAGE)   : 77.4782%
+
+OPTIMAL CLASSIFIER  : Classifier #4
+OPTIMAL SCORE       : 79.13%
+OPTIMAL PENALTY     : +2.078%
+
+ - - - - - - - - HYPER PARAMETERS - - - - - - - - - 
+KERNEL              : sigmoid
+C_PARAM             : 1.0
+
+* * * * * * * * * *
+
+* * * * * * * * * *
+SUMMARY REPORT
+* * * * * * * * * *
+CLASSIFIER          : Support Vector Machine
+FEATURE TYPE        : finger-between-distance
+
+TIME(TOTAL)         : 3.06 seconds 
+TIME(WORST)         : 0.345 seconds 
+TIME(BEST)          : 0.295 seconds 
+TIME(AVERAGE)       : 0.306 seconds
+
+ACCURACY(WORST)     : 85.652% with Training = 88.06% and Testing = 85.652% (-2.408%)
+ACCURACY(BEST)      : 89.565% with Training = 89.366% and Testing = 89.565% (+0.199%)
+ACCURACY(AVERAGE)   : 87.6957%
+
+OPTIMAL CLASSIFIER  : Classifier #3
+OPTIMAL SCORE       : 89.565%
+OPTIMAL PENALTY     : +0.199%
+
+ - - - - - - - - HYPER PARAMETERS - - - - - - - - - 
+KERNEL              : linear
+C_PARAM             : 10.0
+
+* * * * * * * * * *
+
+* * * * * * * * * *
+SUMMARY REPORT
+* * * * * * * * * *
+CLASSIFIER          : Support Vector Machine
+FEATURE TYPE        : finger-between-distance
+
+TIME(TOTAL)         : 3.154 seconds 
+TIME(WORST)         : 0.325 seconds 
+TIME(BEST)          : 0.302 seconds 
+TIME(AVERAGE)       : 0.3154 seconds
+
+ACCURACY(WORST)     : 76.522% with Training = 84.328% and Testing = 76.522% (-7.806%)
+ACCURACY(BEST)      : 89.13% with Training = 84.888% and Testing = 89.13% (+4.242%)
+ACCURACY(AVERAGE)   : 85.0435%
+
+OPTIMAL CLASSIFIER  : Classifier #5
+OPTIMAL SCORE       : 89.13%
+OPTIMAL PENALTY     : +4.242%
+
+ - - - - - - - - HYPER PARAMETERS - - - - - - - - - 
+KERNEL              : poly
+C_PARAM             : 10.0
+
+* * * * * * * * * *
+
+* * * * * * * * * *
+SUMMARY REPORT
+* * * * * * * * * *
+CLASSIFIER          : Support Vector Machine
+FEATURE TYPE        : finger-between-distance
+
+TIME(TOTAL)         : 3.395 seconds 
+TIME(WORST)         : 0.372 seconds 
+TIME(BEST)          : 0.306 seconds 
+TIME(AVERAGE)       : 0.3395 seconds
+
+ACCURACY(WORST)     : 85.217% with Training = 89.552% and Testing = 85.217% (-4.335%)
+ACCURACY(BEST)      : 91.304% with Training = 88.619% and Testing = 91.304% (+2.685%)
+ACCURACY(AVERAGE)   : 88.3478%
+
+OPTIMAL CLASSIFIER  : Classifier #8
+OPTIMAL SCORE       : 91.304%
+OPTIMAL PENALTY     : +2.685%
+
+ - - - - - - - - HYPER PARAMETERS - - - - - - - - - 
+KERNEL              : rbf
+C_PARAM             : 10.0
+
+* * * * * * * * * *
+
+* * * * * * * * * *
+SUMMARY REPORT
+* * * * * * * * * *
+CLASSIFIER          : Support Vector Machine
+FEATURE TYPE        : finger-between-distance
+
+TIME(TOTAL)         : 3.213 seconds 
+TIME(WORST)         : 0.355 seconds 
+TIME(BEST)          : 0.293 seconds 
+TIME(AVERAGE)       : 0.3213 seconds
+
+ACCURACY(WORST)     : 81.739% with Training = 88.246% and Testing = 81.739% (-6.507%)
+ACCURACY(BEST)      : 88.696% with Training = 85.261% and Testing = 88.696% (+3.435%)
+ACCURACY(AVERAGE)   : 85.6087%
+
+OPTIMAL CLASSIFIER  : Classifier #3
+OPTIMAL SCORE       : 88.696%
+OPTIMAL PENALTY     : +3.435%
+
+ - - - - - - - - HYPER PARAMETERS - - - - - - - - - 
+KERNEL              : sigmoid
+C_PARAM             : 10.0
+
+* * * * * * * * * *
+
+* * * * * * * * * *
+SUMMARY REPORT
+* * * * * * * * * *
+CLASSIFIER          : Support Vector Machine
+FEATURE TYPE        : finger-to-palm-distance
+
+TIME(TOTAL)         : 3.094 seconds 
+TIME(WORST)         : 0.363 seconds 
+TIME(BEST)          : 0.281 seconds 
+TIME(AVERAGE)       : 0.3094 seconds
+
+ACCURACY(WORST)     : 89.13% with Training = 92.724% and Testing = 89.13% (-3.594%)
+ACCURACY(BEST)      : 95.217% with Training = 90.299% and Testing = 95.217% (+4.918%)
+ACCURACY(AVERAGE)   : 91.5651%
+
+OPTIMAL CLASSIFIER  : Classifier #10
+OPTIMAL SCORE       : 95.217%
+OPTIMAL PENALTY     : +4.918%
+
+ - - - - - - - - HYPER PARAMETERS - - - - - - - - - 
+KERNEL              : linear
+C_PARAM             : 10.0
+
+* * * * * * * * * *
+
+* * * * * * * * * *
+SUMMARY REPORT
+* * * * * * * * * *
+CLASSIFIER          : Support Vector Machine
+FEATURE TYPE        : finger-to-palm-distance
+
+TIME(TOTAL)         : 3.166 seconds 
+TIME(WORST)         : 0.354 seconds 
+TIME(BEST)          : 0.285 seconds 
+TIME(AVERAGE)       : 0.3166 seconds
+
+ACCURACY(WORST)     : 88.696% with Training = 93.657% and Testing = 88.696% (-4.961%)
+ACCURACY(BEST)      : 94.348% with Training = 90.112% and Testing = 94.348% (+4.236%)
+ACCURACY(AVERAGE)   : 92.2174%
+
+OPTIMAL CLASSIFIER  : Classifier #4
+OPTIMAL SCORE       : 94.348%
+OPTIMAL PENALTY     : +4.236%
+
+ - - - - - - - - HYPER PARAMETERS - - - - - - - - - 
+KERNEL              : poly
+C_PARAM             : 10.0
+
+* * * * * * * * * *
+
+* * * * * * * * * *
+SUMMARY REPORT
+* * * * * * * * * *
+CLASSIFIER          : Support Vector Machine
+FEATURE TYPE        : finger-to-palm-distance
+
+TIME(TOTAL)         : 2.993 seconds 
+TIME(WORST)         : 0.328 seconds 
+TIME(BEST)          : 0.272 seconds 
+TIME(AVERAGE)       : 0.2993 seconds
+
+ACCURACY(WORST)     : 89.13% with Training = 93.284% and Testing = 89.13% (-4.154%)
+ACCURACY(BEST)      : 94.348% with Training = 90.485% and Testing = 94.348% (+3.863%)
+ACCURACY(AVERAGE)   : 91.4782%
+
+OPTIMAL CLASSIFIER  : Classifier #7
+OPTIMAL SCORE       : 94.348%
+OPTIMAL PENALTY     : +3.863%
+
+ - - - - - - - - HYPER PARAMETERS - - - - - - - - - 
+KERNEL              : rbf
+C_PARAM             : 10.0
+
+* * * * * * * * * *
+
+* * * * * * * * * *
+SUMMARY REPORT
+* * * * * * * * * *
+CLASSIFIER          : Support Vector Machine
+FEATURE TYPE        : finger-to-palm-distance
+
+TIME(TOTAL)         : 3.545 seconds 
+TIME(WORST)         : 0.388 seconds 
+TIME(BEST)          : 0.319 seconds 
+TIME(AVERAGE)       : 0.3545 seconds
+
+ACCURACY(WORST)     : 80.87% with Training = 86.007% and Testing = 80.87% (-5.137%)
+ACCURACY(BEST)      : 85.652% with Training = 84.142% and Testing = 85.652% (+1.51%)
+ACCURACY(AVERAGE)   : 83.5217%
+
+OPTIMAL CLASSIFIER  : Classifier #4
+OPTIMAL SCORE       : 85.652%
+OPTIMAL PENALTY     : +1.51%
+
+ - - - - - - - - HYPER PARAMETERS - - - - - - - - - 
+KERNEL              : sigmoid
+C_PARAM             : 1.0
+
+* * * * * * * * * *
+

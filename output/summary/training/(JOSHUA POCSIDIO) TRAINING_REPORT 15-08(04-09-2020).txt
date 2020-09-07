@@ -1,0 +1,25 @@
+* * * * * * * * * *
+SUMMARY REPORT
+* * * * * * * * * *
+CLASSIFIER          : Support Vector Machine
+FEATURE TYPE        : finger-to-palm-distance
+
+TIME(TOTAL)         : 4.595 seconds 
+TIME(WORST)         : 2.592 seconds 
+TIME(BEST)          : 0.203 seconds 
+TIME(AVERAGE)       : 0.4595 seconds
+
+ACCURACY(WORST)     : 98.889% with Training = 99.762% and Testing = 98.889% (-0.873%)
+ACCURACY(BEST)      : 100.0% with Training = 99.286% and Testing = 100.0% (+0.714%)
+ACCURACY(AVERAGE)   : 99.3887%
+
+OPTIMAL CLASSIFIER  : Classifier #1
+OPTIMAL SCORE       : 100.0%
+OPTIMAL PENALTY     : +0.714%
+
+ - - - - - - - - HYPER PARAMETERS - - - - - - - - - 
+KERNEL              : linear
+C_PARAM             : 0.1
+
+* * * * * * * * * *
+

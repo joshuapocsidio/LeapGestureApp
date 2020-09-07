@@ -1,0 +1,144 @@
+____________________________________________________________________________________________________________________________________________________________________________________________________
+        Classifier :    C:\Users\Joshua Pocsidio\Desktop\Joshua Pocsidio\Programming\PyCharm\LeapGestureApp\output\data\trained_data\(JOSHUA POCSIDIO) SVM_finger-angle-and-palm-distance_linear (linear)
+        Gesture    :    four
+        Correct    :    5
+        Incorrect  :    0
+        Result     :    5 / 5
+        Accuracy   :    100.0 %
+        Avg Time   :    0.00039996 seconds
+
+____________________________________________________________________________________________________________________________________________________________________________________________________
+        Classifier :    C:\Users\Joshua Pocsidio\Desktop\Joshua Pocsidio\Programming\PyCharm\LeapGestureApp\output\data\trained_data\(JOSHUA POCSIDIO) SVM_finger-angle-and-palm-distance_poly (poly)
+        Gesture    :    four
+        Correct    :    5
+        Incorrect  :    0
+        Result     :    5 / 5
+        Accuracy   :    100.0 %
+        Avg Time   :    0.00040008 seconds
+
+____________________________________________________________________________________________________________________________________________________________________________________________________
+        Classifier :    C:\Users\Joshua Pocsidio\Desktop\Joshua Pocsidio\Programming\PyCharm\LeapGestureApp\output\data\trained_data\(JOSHUA POCSIDIO) SVM_finger-angle-and-palm-distance_rbf (rbf)
+        Gesture    :    four
+        Correct    :    5
+        Incorrect  :    0
+        Result     :    5 / 5
+        Accuracy   :    100.0 %
+        Avg Time   :    0.00079992 seconds
+
+____________________________________________________________________________________________________________________________________________________________________________________________________
+        Classifier :    C:\Users\Joshua Pocsidio\Desktop\Joshua Pocsidio\Programming\PyCharm\LeapGestureApp\output\data\trained_data\(JOSHUA POCSIDIO) SVM_finger-angle-and-palm-distance_sigmoid (sigmoid)
+        Gesture    :    four
+        Correct    :    5
+        Incorrect  :    0
+        Result     :    5 / 5
+        Accuracy   :    100.0 %
+        Avg Time   :    0.00020004 seconds
+
+____________________________________________________________________________________________________________________________________________________________________________________________________
+        Classifier :    C:\Users\Joshua Pocsidio\Desktop\Joshua Pocsidio\Programming\PyCharm\LeapGestureApp\output\data\trained_data\(JOSHUA POCSIDIO) SVM_finger-angle-using-bones_linear (linear)
+        Gesture    :    four
+        Correct    :    5
+        Incorrect  :    0
+        Result     :    5 / 5
+        Accuracy   :    100.0 %
+        Avg Time   :    0.00019998 seconds
+
+____________________________________________________________________________________________________________________________________________________________________________________________________
+        Classifier :    C:\Users\Joshua Pocsidio\Desktop\Joshua Pocsidio\Programming\PyCharm\LeapGestureApp\output\data\trained_data\(JOSHUA POCSIDIO) SVM_finger-angle-using-bones_poly (poly)
+        Gesture    :    four
+        Correct    :    5
+        Incorrect  :    0
+        Result     :    5 / 5
+        Accuracy   :    100.0 %
+        Avg Time   :    0.00039996 seconds
+
+____________________________________________________________________________________________________________________________________________________________________________________________________
+        Classifier :    C:\Users\Joshua Pocsidio\Desktop\Joshua Pocsidio\Programming\PyCharm\LeapGestureApp\output\data\trained_data\(JOSHUA POCSIDIO) SVM_finger-angle-using-bones_rbf (rbf)
+        Gesture    :    four
+        Correct    :    5
+        Incorrect  :    0
+        Result     :    5 / 5
+        Accuracy   :    100.0 %
+        Avg Time   :    0.00039996 seconds
+
+____________________________________________________________________________________________________________________________________________________________________________________________________
+        Classifier :    C:\Users\Joshua Pocsidio\Desktop\Joshua Pocsidio\Programming\PyCharm\LeapGestureApp\output\data\trained_data\(JOSHUA POCSIDIO) SVM_finger-angle-using-bones_sigmoid (sigmoid)
+        Gesture    :    four
+        Correct    :    5
+        Incorrect  :    0
+        Result     :    5 / 5
+        Accuracy   :    100.0 %
+        Avg Time   :    0.0 seconds
+
+____________________________________________________________________________________________________________________________________________________________________________________________________
+        Classifier :    C:\Users\Joshua Pocsidio\Desktop\Joshua Pocsidio\Programming\PyCharm\LeapGestureApp\output\data\trained_data\(JOSHUA POCSIDIO) SVM_finger-between-distance_linear (linear)
+        Gesture    :    four
+        Correct    :    4
+        Incorrect  :    1
+        Result     :    4 / 5
+        Accuracy   :    80.0 %
+        Avg Time   :    0.00020004 seconds
+
+____________________________________________________________________________________________________________________________________________________________________________________________________
+        Classifier :    C:\Users\Joshua Pocsidio\Desktop\Joshua Pocsidio\Programming\PyCharm\LeapGestureApp\output\data\trained_data\(JOSHUA POCSIDIO) SVM_finger-between-distance_poly (poly)
+        Gesture    :    four
+        Correct    :    4
+        Incorrect  :    1
+        Result     :    4 / 5
+        Accuracy   :    80.0 %
+        Avg Time   :    0.00039996 seconds
+
+____________________________________________________________________________________________________________________________________________________________________________________________________
+        Classifier :    C:\Users\Joshua Pocsidio\Desktop\Joshua Pocsidio\Programming\PyCharm\LeapGestureApp\output\data\trained_data\(JOSHUA POCSIDIO) SVM_finger-between-distance_rbf (rbf)
+        Gesture    :    four
+        Correct    :    3
+        Incorrect  :    2
+        Result     :    3 / 5
+        Accuracy   :    60.0 %
+        Avg Time   :    0.0 seconds
+
+____________________________________________________________________________________________________________________________________________________________________________________________________
+        Classifier :    C:\Users\Joshua Pocsidio\Desktop\Joshua Pocsidio\Programming\PyCharm\LeapGestureApp\output\data\trained_data\(JOSHUA POCSIDIO) SVM_finger-between-distance_sigmoid (sigmoid)
+        Gesture    :    four
+        Correct    :    2
+        Incorrect  :    3
+        Result     :    2 / 5
+        Accuracy   :    40.0 %
+        Avg Time   :    0.0 seconds
+
+____________________________________________________________________________________________________________________________________________________________________________________________________
+        Classifier :    C:\Users\Joshua Pocsidio\Desktop\Joshua Pocsidio\Programming\PyCharm\LeapGestureApp\output\data\trained_data\(JOSHUA POCSIDIO) SVM_finger-to-palm-distance_linear (linear)
+        Gesture    :    four
+        Correct    :    5
+        Incorrect  :    0
+        Result     :    5 / 5
+        Accuracy   :    100.0 %
+        Avg Time   :    0.00079998 seconds
+
+____________________________________________________________________________________________________________________________________________________________________________________________________
+        Classifier :    C:\Users\Joshua Pocsidio\Desktop\Joshua Pocsidio\Programming\PyCharm\LeapGestureApp\output\data\trained_data\(JOSHUA POCSIDIO) SVM_finger-to-palm-distance_poly (poly)
+        Gesture    :    four
+        Correct    :    5
+        Incorrect  :    0
+        Result     :    5 / 5
+        Accuracy   :    100.0 %
+        Avg Time   :    0.0 seconds
+
+____________________________________________________________________________________________________________________________________________________________________________________________________
+        Classifier :    C:\Users\Joshua Pocsidio\Desktop\Joshua Pocsidio\Programming\PyCharm\LeapGestureApp\output\data\trained_data\(JOSHUA POCSIDIO) SVM_finger-to-palm-distance_rbf (rbf)
+        Gesture    :    four
+        Correct    :    5
+        Incorrect  :    0
+        Result     :    5 / 5
+        Accuracy   :    100.0 %
+        Avg Time   :    0.0 seconds
+
+____________________________________________________________________________________________________________________________________________________________________________________________________
+        Classifier :    C:\Users\Joshua Pocsidio\Desktop\Joshua Pocsidio\Programming\PyCharm\LeapGestureApp\output\data\trained_data\(JOSHUA POCSIDIO) SVM_finger-to-palm-distance_sigmoid (sigmoid)
+        Gesture    :    four
+        Correct    :    5
+        Incorrect  :    0
+        Result     :    5 / 5
+        Accuracy   :    100.0 %
+        Avg Time   :    0.00060006 seconds
+

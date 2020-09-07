@@ -1,0 +1,58 @@
+* * * * * * * * * *
+SUMMARY REPORT
+* * * * * * * * * *
+CLASSIFIER          : Multi-Layer Perceptron Neural Network
+FEATURE TYPE        : finger-angle-and-palm-distance
+
+TIME(TOTAL)         : 348.623 seconds 
+TIME(WORST)         : 73.575 seconds 
+TIME(BEST)          : 60.64 seconds 
+TIME(AVERAGE)       : 69.7246 seconds
+
+ACCURACY(WORST)     : 92.778% with Training = 97.143% and Testing = 92.778% (-4.365%)
+ACCURACY(BEST)      : 96.111% with Training = 95.476% and Testing = 96.111% (+0.635%)
+ACCURACY(AVERAGE)   : 94.1112%
+
+OPTIMAL CLASSIFIER  : Classifier #1
+OPTIMAL SCORE       : 96.111%
+OPTIMAL PENALTY     : +0.635%
+
+ - - - - - - - - HYPER PARAMETERS - - - - - - - - - 
+ACTIVATION          : relu
+OPTIMIZER           : adam
+BATCH_SIZE          : 5
+HIDDEN_LAYERS       : 2
+HIDDEN_LAYER_NODES  : (128, 128)
+LEARNING RATE       : 0.01
+
+* * * * * * * * * *
+
+* * * * * * * * * *
+SUMMARY REPORT
+* * * * * * * * * *
+CLASSIFIER          : Multi-Layer Perceptron Neural Network
+FEATURE TYPE        : finger-angle-and-palm-distance
+
+TIME(TOTAL)         : 354.558 seconds 
+TIME(WORST)         : 77.773 seconds 
+TIME(BEST)          : 66.896 seconds 
+TIME(AVERAGE)       : 70.9116 seconds
+
+ACCURACY(WORST)     : 93.889% with Training = 96.429% and Testing = 93.889% (-2.54%)
+ACCURACY(BEST)      : 96.667% with Training = 94.762% and Testing = 96.667% (+1.905%)
+ACCURACY(AVERAGE)   : 95.3334%
+
+OPTIMAL CLASSIFIER  : Classifier #3
+OPTIMAL SCORE       : 96.667%
+OPTIMAL PENALTY     : +1.905%
+
+ - - - - - - - - HYPER PARAMETERS - - - - - - - - - 
+ACTIVATION          : relu
+OPTIMIZER           : sgd
+BATCH_SIZE          : 5
+HIDDEN_LAYERS       : 2
+HIDDEN_LAYER_NODES  : (64, 64)
+LEARNING RATE       : 0.01
+
+* * * * * * * * * *
+
