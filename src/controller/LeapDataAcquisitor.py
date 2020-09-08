@@ -21,13 +21,14 @@ def convert_to_leap_data_set(labels, values):
 
 
 class LeapDataAcquisitor:
-    def __init__(self, leap_controller, subject_name, verbose=False, supervised=True):
+    def __init__(self, leap_controller, subject_name, verbose=False, supervised=True,gesture_set=None):
         self.leap_controller = leap_controller
         self.subject_name = subject_name
         self.verbose = verbose
+        self.gesture_set = gesture_set
         self.supervised = supervised
 
-    def get_palm_to_finger_distance_set(self, gesture_name="", iterations=1, hand=None, return_mode=False):
+    def get_palm_to_finger_distance_set(self, gesture_name=None, iterations=1, hand=None, return_mode=False):
         # Initialize name of the file and labels
         file_name = 'finger-to-palm-distance'
         labels = ["thumb", "index", "middle", "ring", "pinky"]
@@ -50,16 +51,17 @@ class LeapDataAcquisitor:
                 # Add the hand data to data set
                 value_set.append(distance)
 
-            # Add the palm vectors data
-            xd, yd, zd = self.get_palm_x_y_z_dir(hand=hand)
-            value_set.append(xd)
-            value_set.append(yd)
-            value_set.append(zd)
+            if return_mode is False:
+                # Add the palm vectors data
+                xd, yd, zd = self.get_palm_x_y_z_dir(hand=hand)
+                value_set.append(xd)
+                value_set.append(yd)
+                value_set.append(zd)
 
-            # Add palm vectors labels
-            labels.append('palm_xd')
-            labels.append('palm_yd')
-            labels.append('palm_zd')
+                # Add palm vectors labels
+                labels.append('palm_xd')
+                labels.append('palm_yd')
+                labels.append('palm_zd')
 
             # Convert into leap data
             feature = convert_to_leap_data_set(labels=labels, values=value_set)
@@ -69,11 +71,13 @@ class LeapDataAcquisitor:
 
             if return_mode is False:
                 # Save data into a file
+                if self.gesture_set is not None:
+                    file_name = str(self.gesture_set) + "--" + file_name
                 LeapIO.save_data(file_name=file_name, subject_name=self.subject_name, gesture_name=gesture_name, data_set=feature)
             else:
                 return value_set
 
-    def get_palm_to_finger_angle_set(self, gesture_name, iterations=1, hand=None, return_mode=False):
+    def get_palm_to_finger_angle_set(self, gesture_name=None, iterations=1, hand=None, return_mode=False):
         file_name = 'finger-angle-using-bones'
         labels = ["thumb", "index", "middle", "ring", "pinky"]
         feature_set = []
@@ -132,11 +136,13 @@ class LeapDataAcquisitor:
 
             if return_mode is False:
                 # Save data into a file
+                if self.gesture_set is not None:
+                    file_name = str(self.gesture_set) + "--" + file_name
                 LeapIO.save_data(file_name=file_name, subject_name=self.subject_name, gesture_name=gesture_name, data_set=feature)
             else:
                 return value_set
 
-    def get_finger_to_palm_angle_and_distance(self, gesture_name, iterations=1, hand=None, return_mode=False):
+    def get_finger_to_palm_angle_and_distance(self, gesture_name=None, iterations=1, hand=None, return_mode=False):
         file_name = 'finger-angle-and-palm-distance'
         labels = ["thumb", "index", "middle", "ring", "pinky"]
         feature_set = []
@@ -197,11 +203,13 @@ class LeapDataAcquisitor:
 
             if return_mode is False:
                 # Save data into a file
+                if self.gesture_set is not None:
+                    file_name = str(self.gesture_set) + "--" + file_name
                 LeapIO.save_data(file_name=file_name, subject_name=self.subject_name, gesture_name=gesture_name, data_set=feature)
             else:
                 return value_set
 
-    def get_distance_between_fingers_set(self, gesture_name, iterations=1, hand=None, return_mode=False):
+    def get_distance_between_fingers_set(self, gesture_name=None, iterations=1, hand=None, return_mode=False):
         file_name = 'finger-between-distance'
         labels = ["thumb-index", "index-middle", "middle-ring", "ring-pinky"]
         feature_set = []
@@ -257,11 +265,16 @@ class LeapDataAcquisitor:
 
             if return_mode is False:
                 # Save data into a file
+                if self.gesture_set is not None:
+                    file_name = str(self.gesture_set) + "--" + file_name
                 LeapIO.save_data(file_name=file_name, subject_name=self.subject_name, gesture_name=gesture_name, data_set=feature)
             else:
                 return value_set
 
-    def get_all_hand_feature_type(self, gesture_name, iterations=1):
+    def get_all_hand_feature_type(self, gesture_name=None, iterations=1, gesture_set=None):
+        if gesture_set is not None:
+            self.gesture_set = gesture_set
+
         i = 0
         while i < iterations:
             # Obtain hand and fingers data
@@ -307,7 +320,7 @@ class LeapDataAcquisitor:
                 is_valid, hand = self.unsupervised_data_validation()
                 if is_valid is True:
                     done = True
-                    time.sleep(0.05)
+                    time.sleep(0.1)
             pass
         return hand
 

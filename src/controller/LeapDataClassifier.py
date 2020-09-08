@@ -78,6 +78,12 @@ class LeapDataClassifier:
                                                                       hand=hand)
             print("4 : " + str(X_data))
 
+        # Add the palm vectors data
+        xd, yd, zd = self.acquisitor.get_palm_x_y_z_dir(hand=hand)
+        X_data.append(xd)
+        X_data.append(yd)
+        X_data.append(zd)
+
         # Recording timing of classification
         start_time = time.time()
         prediction = trainer.classify([X_data])

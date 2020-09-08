@@ -3,6 +3,7 @@ from controller.LeapDataAcquisitor import LeapDataAcquisitor
 from controller.LeapDataTrainer import SVM_Trainer
 import leapio.LeapIO as io
 import leapio.Printer as printer
+from string import strip
 import numpy as np
 
 
@@ -36,13 +37,14 @@ def show(leap_controller):
             chosen_pickle = list_data_files[int(choice) - 1]
             chosen_pickle_no_extension = chosen_pickle.rsplit(".", 1)[0]
             kernel_type = chosen_pickle_no_extension.rsplit("_", 1)[-1]
-
+            subject_name = chosen_pickle_no_extension.rsplit("(", 1)[1].rsplit(")")[0]
+            feature_type = strip(chosen_pickle_no_extension.rsplit(")")[1].rsplit(".")[0])
             # Show feature type and kernel type based on chosen pickle file
             print("Chosen Pickle : " + chosen_pickle)
             print("Kernel Type   : " + kernel_type + "\n")
 
             # Call data classification functions
-            trainer = SVM_Trainer(subject_name="JOSHUA", feature_type=chosen_pickle_no_extension, kernel_type=kernel_type)
+            trainer = SVM_Trainer(subject_name=subject_name, feature_type=feature_type, kernel_type=kernel_type)
             trainer.load(chosen_pickle)
 
             # Do demo for 1 minute
@@ -55,10 +57,13 @@ def show(leap_controller):
                 frame = leap_controller.frame()
                 hands = frame.hands
                 if len(hands) > 0:
-                    data = acquisitor.get_palm_to_finger_distance_set(return_mode=True)
-                    prediction = trainer.classify([data])
+                    hand = hands[0]
+                    data = get_relevant_data(kernel_type=kernel_type, file_name=chosen_pickle_no_extension, acquisitor=acquisitor, hand=hand)
+                    prediction = trainer.classify(data)
 
-                    while prediction == trainer.classify([acquisitor.get_palm_to_finger_distance_set(return_mode=True)]) and stack < 5:
+                    hand = leap_controller.frame().hands[0]
+                    while prediction == trainer.classify(get_relevant_data(kernel_type=kernel_type, file_name=chosen_pickle_no_extension, acquisitor=acquisitor, hand=hand)) and stack < 5:
+                        hand = leap_controller.frame().hands[0]
                         stack += 1
 
                     if stack >= 5:
@@ -95,3 +100,20 @@ def show(leap_controller):
             # Exit
             done = True
             pass
+
+
+def get_relevant_data(kernel_type, file_name, acquisitor, hand=None):
+    if "finger-to-palm-distance" + "_" + kernel_type in file_name:
+        data = acquisitor.get_palm_to_finger_distance_set(hand=hand, return_mode=True)
+    elif "finger-angle-using-bones" + "_" + kernel_type in file_name:
+        data = acquisitor.get_palm_to_finger_angle_set(hand=hand, return_mode=True)
+    elif "finger-angle-and-palm-distance" + "_" + kernel_type in file_name:
+        data = acquisitor.get_finger_to_palm_angle_and_distance(hand=hand, return_mode=True)
+    elif "finger-between-distance" + "_" + kernel_type in file_name:
+        data = acquisitor.get_distance_between_fingers_set(hand=hand, return_mode=True)
+    # Add the palm vectors data
+    xd, yd, zd = acquisitor.get_palm_x_y_z_dir(hand=hand)
+    data.append(xd)
+    data.append(yd)
+    data.append(zd)
+    return [data]

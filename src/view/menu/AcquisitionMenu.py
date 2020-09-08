@@ -25,10 +25,10 @@ def show(controller):
             manual_acquisition(controller=controller)
             pass
         elif choice == '2':
-            do_acquisition(controller=controller, intervals=100)
+            do_acquisition(controller=controller, intervals=100, checkpoints=10)
             pass
         elif choice == '3':
-            do_acquisition(controller=controller, intervals=25)
+            do_acquisition(controller=controller, intervals=25, checkpoints=5)
             pass
         elif choice == '0':
             done = True
@@ -38,7 +38,7 @@ def show(controller):
             pass
     pass
 
-def do_acquisition(controller, intervals):
+def do_acquisition(controller, intervals, checkpoints):
     print("--------------------")
     print("TRAINING ACQUISITION")
     print("--------------------")
@@ -74,18 +74,17 @@ def do_acquisition(controller, intervals):
             print("Acquiring Gesture : " + upper(cur_gesture) + " --> " + hand_config[i_hand] + " ")
 
             # Loop between each gesture data taken
-            print("\rProgress ----> " + str(0) + "/" + str(intervals) + "acquired"),
+            print("\rProgress ----> " + str(0) + "/" + str(intervals) + " acquired"),
             raw_input("\nSystem       :       Press any key to get data: "),
             n_taken = 0
 
-            # raw_input("\rSystem       :       Valid hand(s) detected --> Press any key to get data: \r"),
             while n_taken < intervals:
                 # Acquire data
-                acquisitor.get_all_hand_feature_type(gesture_name=cur_gesture)
+                acquisitor.get_all_hand_feature_type(gesture_name=cur_gesture, gesture_set=upper(gesture_titles[gesture_title_index]))
                 n_taken += 1
-                print("\rProgress ----> " + str(n_taken) + "/" + str(intervals) + "acquired"),
+                print("\rProgress ----> " + str(n_taken) + "/" + str(intervals) + " acquired"),
 
-                if n_taken % 10 == 0:
+                if n_taken % checkpoints == 0:
                     if n_taken == intervals:
                         raw_input("\nSystem       :       Gesture Checkpoint reached. Press any key to continue"),
                     else:
