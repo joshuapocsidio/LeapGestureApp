@@ -1,9 +1,0 @@
-____________________________________________________________________________________________________________________________________________________________________________________________________
-        Classifier :    C:\Users\Joshua Pocsidio\Desktop\Joshua Pocsidio\Programming\PyCharm\LeapGestureApp\output\data\trained_data\(JOSHUA POCSIDIO) SVM_finger-between-distance_poly (poly)
-        Gesture    :    fist
-        Correct    :    0
-        Incorrect  :    5
-        Result     :    0 / 5
-        Accuracy   :    0.0 %
-        Avg Time   :    0.0009999 seconds
-

@@ -1,9 +1,0 @@
-____________________________________________________________________________________________________________________________________________________________________________________________________
-        Classifier :    C:\Users\Joshua Pocsidio\Desktop\Joshua Pocsidio\Programming\PyCharm\LeapGestureApp\output\data\trained_data\(JOSHUA POCSIDIO) SVM_finger-to-palm-distance_sigmoid (sigmoid)
-        Gesture    :    five
-        Correct    :    4
-        Incorrect  :    1
-        Result     :    4 / 5
-        Accuracy   :    80.0 %
-        Avg Time   :    0.00039996 seconds
-

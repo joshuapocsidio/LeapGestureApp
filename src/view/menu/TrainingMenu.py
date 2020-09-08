@@ -25,6 +25,7 @@ class TrainingMenu:
             print("-------------")
             print("(1) - Support Vector Machine")
             print("(2) - Multilayer Perceptron (Neural Network)")
+            print("(3) - Decision Trees")
             print("(0) - Back")
 
             choice = raw_input("Your Choice: ")
@@ -34,6 +35,10 @@ class TrainingMenu:
                 pass
             elif choice == '2':
                 self.classifier_type = 'nn'
+                self.prompt_training_mode()
+                pass
+            elif choice == '3':
+                self.classifier_type = 'dt'
                 self.prompt_training_mode()
                 pass
             elif choice == '0':
@@ -107,7 +112,11 @@ class TrainingMenu:
                     self.optimizer = optimizer
                     training_summary = self.train_auto(csv_file=data_file, subject_name=subject_name, feature_type=feature_type)
                     file_name = io.save_report(file_name=file_name, subject_name=subject_name, report_header='training',
-                                               line=training_summary)
+                                               line=training_summary, classifier_type=self.classifier_type)
+        elif self.classifier_type == 'dt':
+            training_summary = self.train_auto(csv_file=data_file,subject_name=subject_name, feature_type=feature_type)
+            file_name = io.save_report(file_name=file_name, subject_name=subject_name, report_header='training',
+                                       line=training_summary, classifier_type=self.classifier_type)
         pass
 
     def multi_training(self):
