@@ -97,7 +97,7 @@ class TrainingMenu:
             print("")
             training_summary = self.train_auto(csv_file=data_file, subject_name=subject_name, feature_type=feature_type)
             file_name = io.save_report(file_name=file_name, subject_name=subject_name, report_header='training',
-                                       line=training_summary)
+                                       line=training_summary, classifier_type=self.classifier_type)
         elif self.classifier_type == 'nn':
             activations = ['relu', 'logistic']
             optimizers = ['adam', 'sgd']

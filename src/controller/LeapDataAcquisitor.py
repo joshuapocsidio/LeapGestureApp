@@ -50,6 +50,17 @@ class LeapDataAcquisitor:
                 # Add the hand data to data set
                 value_set.append(distance)
 
+            # Add the palm vectors data
+            xd, yd, zd = self.get_palm_x_y_z_dir(hand=hand)
+            value_set.append(xd)
+            value_set.append(yd)
+            value_set.append(zd)
+
+            # Add palm vectors labels
+            labels.append('palm_xd')
+            labels.append('palm_yd')
+            labels.append('palm_zd')
+
             # Convert into leap data
             feature = convert_to_leap_data_set(labels=labels, values=value_set)
             # Append set of finger data into a set
@@ -98,6 +109,18 @@ class LeapDataAcquisitor:
 
                 # Add the data to data_set
                 value_set.append(angle_deg)
+
+            if return_mode is False:
+                # Add the palm vectors data
+                xd, yd, zd = self.get_palm_x_y_z_dir(hand=hand)
+                value_set.append(xd)
+                value_set.append(yd)
+                value_set.append(zd)
+
+                # Add palm vectors labels
+                labels.append('palm_xd')
+                labels.append('palm_yd')
+                labels.append('palm_zd')
 
             # Convert into leap data
             feature = convert_to_leap_data_set(labels=labels, values=value_set)
@@ -152,6 +175,18 @@ class LeapDataAcquisitor:
 
                 i += 1
 
+            if return_mode is False:
+                # Add the palm vectors data
+                xd, yd, zd = self.get_palm_x_y_z_dir(hand=hand)
+                value_set.append(xd)
+                value_set.append(yd)
+                value_set.append(zd)
+
+                # Add palm vectors labels
+                labels.append('palm_xd')
+                labels.append('palm_yd')
+                labels.append('palm_zd')
+
             # Convert into leap data
             feature = convert_to_leap_data_set(labels=labels, values=value_set)
             # Append set of finger data into a set
@@ -200,6 +235,18 @@ class LeapDataAcquisitor:
 
                 i += 1
 
+            if return_mode is False:
+                # Add the palm vectors data
+                xd, yd, zd = self.get_palm_x_y_z_dir(hand=hand)
+                value_set.append(xd)
+                value_set.append(yd)
+                value_set.append(zd)
+
+                # Add palm vectors labels
+                labels.append('palm_xd')
+                labels.append('palm_yd')
+                labels.append('palm_zd')
+
             # Convert into leap data
             feature = convert_to_leap_data_set(labels=labels, values=value_set)
             # Append set of finger data into a set
@@ -227,6 +274,14 @@ class LeapDataAcquisitor:
 
             i += 1
 
+    def get_palm_x_y_z_dir(self, hand):
+        if hand is not None:
+            x_d = round(hand.palm_normal.x, 5)
+            y_d = round(hand.palm_normal.y, 5)
+            z_d = round(hand.palm_normal.z, 5)
+
+            return x_d, y_d, z_d
+
     def sample_hand_data(self):
         # Sample 100 frames hand data
         data_list = []
@@ -252,7 +307,7 @@ class LeapDataAcquisitor:
                 is_valid, hand = self.unsupervised_data_validation()
                 if is_valid is True:
                     done = True
-                    time.sleep(0.2)
+                    time.sleep(0.05)
             pass
         return hand
 

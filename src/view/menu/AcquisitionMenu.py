@@ -50,7 +50,6 @@ def do_acquisition(controller, intervals):
     # Initialize acquisitor with subject name
     subject_name = prompt_subject_name()
     acquisitor = LeapDataAcquisitor(leap_controller=controller, subject_name=subject_name, supervised=False)
-    gesture_src = ['gestures_counting.txt', 'gestures_status.txt', 'gestures_asl.txt']
     gesture_titles = ['Counting Gestures', 'Status Gestures', 'American Sign Language Gestures']
     hand_config = ['LEFT HAND', 'RIGHT HAND']
     lighting_config = ['WELL LIT ENVIRONMENT', 'DIMLY LIT ENVIRONMENT']
@@ -58,49 +57,47 @@ def do_acquisition(controller, intervals):
     # Change this between sessions
     cur_lighting = lighting_config[0]
 
-    i_src = 0
-    while i_src < len(gesture_src):
-        print("* * * * * * * * " + gesture_titles[i_src] + "* * * * * * * * ")
-        # Obtain gestures from file
-        gesture_list = io.read_col(gesture_src[i_src])
+    gesture_src, gesture_title_index = prompt_gesture_src()
 
-        # Loop between gestures
-        i_ges = 0
-        while i_ges < len(gesture_list):
-            cur_gesture = gesture_list[i_ges]
+    print("* * * * * * * * " + gesture_titles[gesture_title_index] + "* * * * * * * * ")
+    # Obtain gestures from file
+    gesture_list = io.read_col(gesture_src)
 
-            # Loop between hands
-            i_hand = 0
-            while i_hand < len(hand_config):
-                print("Acquiring Gesture : " + upper(cur_gesture) + " --> " + hand_config[i_hand] + " ")
+    # Loop between gestures
+    i_ges = 0
+    while i_ges < len(gesture_list):
+        cur_gesture = gesture_list[i_ges]
 
-                # Loop between each gesture data taken
-                print("\rProgress ----> " + str(0) + "/" + str(intervals) + "acquired"),
-                raw_input("\nSystem       :       Press any key to get data: "),
-                n_taken = 0
+        # Loop between hands
+        i_hand = 0
+        while i_hand < len(hand_config):
+            print("Acquiring Gesture : " + upper(cur_gesture) + " --> " + hand_config[i_hand] + " ")
 
-                # raw_input("\rSystem       :       Valid hand(s) detected --> Press any key to get data: \r"),
-                while n_taken < intervals:
-                    # Acquire data
-                    acquisitor.get_all_hand_feature_type(gesture_name=cur_gesture)
-                    n_taken += 1
-                    print("\rProgress ----> " + str(n_taken) + "/" + str(intervals) + "acquired"),
+            # Loop between each gesture data taken
+            print("\rProgress ----> " + str(0) + "/" + str(intervals) + "acquired"),
+            raw_input("\nSystem       :       Press any key to get data: "),
+            n_taken = 0
 
-                    if n_taken % 10 == 0:
-                        if n_taken == intervals:
-                            raw_input("\nSystem       :       Gesture Checkpoint reached. Press any key to continue"),
-                        else:
-                            raw_input("\nSystem       :       Press any key to get data: "),
-                    pass
-                print(" -- SUCCESS!\n")
-                i_hand += 1
+            # raw_input("\rSystem       :       Valid hand(s) detected --> Press any key to get data: \r"),
+            while n_taken < intervals:
+                # Acquire data
+                acquisitor.get_all_hand_feature_type(gesture_name=cur_gesture)
+                n_taken += 1
+                print("\rProgress ----> " + str(n_taken) + "/" + str(intervals) + "acquired"),
+
+                if n_taken % 10 == 0:
+                    if n_taken == intervals:
+                        raw_input("\nSystem       :       Gesture Checkpoint reached. Press any key to continue"),
+                    else:
+                        raw_input("\nSystem       :       Press any key to get data: "),
                 pass
-
-            i_ges += 1
+            print(" -- SUCCESS!\n")
+            i_hand += 1
             pass
 
-        i_src += 1
+        i_ges += 1
         pass
+
 
     print("")
     print("* * * * Counting Gestures * * * *")
@@ -195,7 +192,7 @@ def prompt_subject_name():
             return subject_name
 
 
-def prompt_gesture_name(gesture_src='gestures_asl.txt'):
+def prompt_gesture_name(gesture_src='gestures_counting.txt'):
     # Prompts user for name of gesture
     done = False
 
@@ -213,6 +210,27 @@ def prompt_gesture_name(gesture_src='gestures_asl.txt'):
             print("Please try again")
         else:
             return gesture_name
+
+
+def prompt_gesture_src():
+    # Prompts user for name of gesture source
+    done = False
+
+    while done is False:
+        gesture_src_list = ['gestures_counting.txt', 'gestures_status.txt', 'gestures_asl.txt']
+
+        print("* List of Valid Gesture Sources *")
+        printer.print_numbered_list(gesture_src_list)
+        choice = raw_input("Enter the Gesture Source: ")
+        gesture_src = lower(gesture_src_list[int(choice) - 1])
+        print("")
+
+        num_choice = int(choice)
+
+        if num_choice < 1 and num_choice > len(gesture_src_list):
+            print("Please try again")
+        else:
+            return gesture_src, num_choice-1
 
 def prompt_iterations():
     # Prompts user for number of iterations

@@ -2,9 +2,8 @@ import inspect
 import os
 import sys
 from datetime import date, datetime
-from string import lower, rsplit
+from string import lower, rsplit, upper
 import pickle
-
 
 src_dir = os.path.dirname(inspect.getfile(inspect.currentframe()))
 lib_dir = os.path.abspath(os.path.join(src_dir, '../leapLib'))
@@ -81,12 +80,14 @@ def save_classifier(pickle_name, data):
     pickle_file.close()
     pass
 
+
 def load_classifier(pickle_name):
     file_path = trd_dir + rsplit(pickle_name, "\\")[-1]
     print("Saving Classifier : " + str(file_path))
     pickle_file = open(file_path, 'rb')
     data = pickle.load(pickle_file)
     return data
+
 
 def save_scale(pickle_name, data):
     file_path = sca_dir + pickle_name
@@ -95,6 +96,7 @@ def save_scale(pickle_name, data):
     pickle.dump(data, pickle_file)
     pickle_file.close()
 
+
 def load_scale(pickle_name):
     file_path = sca_dir + rsplit(pickle_name, "\\")[-1]
     print("Loading Scale     : " + str(file_path))
@@ -102,10 +104,12 @@ def load_scale(pickle_name):
     data = pickle.load(pickle_file)
     return data
 
+
 # SUMMARY FUNCTIONS
-def save_report(subject_name, report_header, line, file_name=None):
+def save_report(subject_name, report_header, line, classifier_type, file_name=None):
     # Validate the file name - creates new one if does not exist
-    file_name = validate_report_file(file_name=file_name, report_header=report_header, subject_name=subject_name)
+    file_name = validate_report_file(file_name=file_name, report_header=report_header, subject_name=subject_name,
+                                     classifier_type=classifier_type)
     # Append to report once validated
     append_to_report(file_name=file_name, line=line)
 
@@ -119,15 +123,16 @@ def append_to_report(file_name, line):
         writer.write('\n')
         writer.close()
 
+
 # TRAINING SUMMARY FUNCTIONS
-def create_training_report(subject_name):
+def create_training_report(subject_name, classifier_type):
     today = date.today()
     now = datetime.now()
 
     date_today = today.strftime("%d-%m-%Y")
     time_now = now.strftime("%H-%M")
 
-    file_name = "TRAINING_REPORT " + str(time_now) + "(" + str(date_today) + ").txt"
+    file_name = upper(classifier_type) + "_TRAINING_REPORT " + str(time_now) + "(" + str(date_today) + ").txt"
     file_name = tra_dir + "(" + subject_name + ") " + file_name
 
     writer = open(file_name, 'w')
@@ -171,10 +176,10 @@ def validate_data_file(file_name, labels, verbose=False):
         create_data_file(file_name=file_name, labels=labels)
 
 
-def validate_report_file(report_header, subject_name, file_name):
+def validate_report_file(report_header, subject_name, file_name, classifier_type):
     if file_name is None:
         if lower(report_header) == 'training':
-            return create_training_report(subject_name)
+            return create_training_report(subject_name, classifier_type)
         elif lower(report_header) == 'classification':
             return create_classification_report(subject_name)
         else:
@@ -261,7 +266,6 @@ def get_pickle_files(directory=trd_dir):
             pickle_file_names.append(file_name)
 
     return pickle_file_names
-
 
 
 def read_row(file_name, index=0, delimiter=','):

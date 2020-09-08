@@ -13,6 +13,7 @@ def show(leap_controller):
         print("REAL TIME RECOGNITION")
         print("---------------------")
         print("(1) - Live Demo")
+        print("(2) - Loop Demo")
         print("(9) - One Gesture Test")
         print("(0) - Exit Program")
 
@@ -57,10 +58,10 @@ def show(leap_controller):
                     data = acquisitor.get_palm_to_finger_distance_set(return_mode=True)
                     prediction = trainer.classify([data])
 
-                    while prediction == trainer.classify([acquisitor.get_palm_to_finger_distance_set(return_mode=True)]) and stack < 10:
+                    while prediction == trainer.classify([acquisitor.get_palm_to_finger_distance_set(return_mode=True)]) and stack < 5:
                         stack += 1
 
-                    if stack >= 10:
+                    if stack >= 5:
                         print("\rTime Elapsed : " + str(time_elapsed) + " seconds ---> Prediction : " + str(prediction[0])),
                         stack = 0
 
@@ -75,6 +76,18 @@ def show(leap_controller):
             print("Number of Frame per Sample : " + str(len(hand_list)))
             print("----------------------------------------------------\n\n")
 
+            pass
+        elif choice == '2':
+            done = True
+            print("")
+            while done is True:
+                frame = leap_controller.frame()
+                hand = frame.hands[0]
+
+                x_d = round(hand.palm_normal.x, 5)
+                y_d = round(hand.palm_normal.y, 5)
+                z_d = round(hand.palm_normal.z, 5)
+                print("\r" + str(x_d) + ", " + str(y_d) + ", " + str(z_d)),
             pass
         elif choice == '9':
             pass
