@@ -1,5 +1,8 @@
 import math
 import time
+from string import strip
+import numpy as np
+import pandas as pd
 
 from pip._vendor.distlib.compat import raw_input
 
@@ -21,12 +24,21 @@ def convert_to_leap_data_set(labels, values):
 
 
 class LeapDataAcquisitor:
-    def __init__(self, leap_controller, subject_name, verbose=False, supervised=True,gesture_set=None):
+    def __init__(self, leap_controller, subject_name=None, verbose=False, supervised=True,gesture_set=None):
         self.leap_controller = leap_controller
         self.subject_name = subject_name
         self.verbose = verbose
         self.gesture_set = gesture_set
         self.supervised = supervised
+
+    def acquire_data_from_csv(self, csv_file):
+
+        # Read csv file
+        data = pd.read_csv(csv_file)
+        X = np.array(data.drop(['class'], 1))
+        y = np.array(data['class'])
+
+        return X, y
 
     def get_palm_to_finger_distance_set(self, gesture_name=None, iterations=1, hand=None, return_mode=False):
         # Initialize name of the file and labels

@@ -1,5 +1,5 @@
 import time
-from string import lower
+from string import lower, strip
 
 import leapio.LeapIO as io
 import leapio.Printer as printer
@@ -21,6 +21,154 @@ class ClassificationMenu:
             print("-------------------")
             print("DATA CLASSIFICATION")
             print("-------------------")
+            print("(1) - Real Time Classification Test")
+            print("(2) - Unseen Data Classification Test")
+            print("(0) - Back")
+
+            choice = raw_input("Your Choice: ")
+
+            if choice == '1':
+                self.real_time_classification_test()
+                pass
+            elif choice == '2':
+                self.unseen_data_classification_test()
+                pass
+            elif choice == '0':
+                pass
+
+    def unseen_data_classification_test(self):
+        done = False
+        while done is False:
+            print("--------------------------")
+            print("UNSEEN DATA CLASSIFICATION")
+            print("--------------------------")
+            print("(1) - Single Personalized Test")
+            print("(2) - Single Non-Personalized Test")
+            print("(3) - Multi Personalized Test")
+            print("(4) - Multi Non-Personalized Test")
+            print("(0) - Back")
+
+            choice = raw_input("Your Choice: ")
+
+            file_name = None
+            unseen_data_files, pickle_files, _, _, subject_name_list = self.get_params()
+            if choice == '1':
+                choice_subject_name = self.prompt_subject_name()
+
+                # Obtain all trained data for this test subject
+                pickle_file_list = []
+                for pickle_file in pickle_files:
+                    subject_name = pickle_file.rsplit("(", 1)[1].rsplit(")")[0]
+
+                    # Want personalized data -- test with own unseen data
+                    if lower(subject_name) == lower(choice_subject_name):
+                        # Do Classification Test
+                        print(pickle_file)
+                        pickle_file_list.append(pickle_file)
+                        pass
+
+                # Get Own Unseen Data
+                for unseen_data in unseen_data_files:
+                    comparison_subject_name = unseen_data.split("(")[1].split(")")[0]
+                    unseen_feature_set = unseen_data.split("--")[1].split(".csv")[0]
+                    unseen_subject_name = unseen_data.split("(")[1].split(")")[0]
+                    unseen_gesture_set = strip(unseen_data.split("--")[0].split(")")[1])
+                    for pickle_file in pickle_file_list:
+                        # Get File Path without folders
+                        file_path = pickle_file.split("\\")[-1]
+                        # Get parameters
+                        classifier_type = file_path.split(" ")[0]
+                        gesture_set = strip(file_path.split("--")[0].split(")")[1])
+                        feature_set = file_path.split("--")[1].split(".pickle")[0].split("_")[0]
+
+                        # Only do classification if same type of feature set ---> Otherwise will not work at all
+                        if feature_set == unseen_feature_set and \
+                                unseen_subject_name == choice_subject_name and \
+                                unseen_gesture_set == gesture_set:
+                            print("UNSEEN : " + unseen_data)
+                            # Do classification from csv
+                            file_name = self.classification_controller.do_classification_from_csv(
+                                pickle_file=pickle_file,
+                                test_subject=choice_subject_name,
+                                comparison_subject=comparison_subject_name,
+                                classifier_type=classifier_type,
+                                gesture_set=gesture_set,
+                                feature_set=feature_set,
+                                unseen_data=unseen_data,
+                                file_name=file_name
+                            )
+
+            elif choice == '2':
+                choice_subject_name = self.prompt_subject_name()
+
+                # Obtain all trained data for this test subject
+                pickle_file_list = []
+                for pickle_file in pickle_files:
+                    subject_name = pickle_file.rsplit("(", 1)[1].rsplit(")")[0]
+
+                    # Want personalized data -- test with own unseen data
+                    if lower(subject_name) == lower(choice_subject_name):
+                        # Do Classification Test
+                        print(pickle_file)
+                        pickle_file_list.append(pickle_file)
+                        pass
+
+                # Get Others' Unseen Data
+                for unseen_data in unseen_data_files:
+                    comparison_subject_name = unseen_data.split("(")[1].split(")")[0]
+                    unseen_feature_set = unseen_data.split("--")[1].split(".csv")[0]
+                    for pickle_file in pickle_file_list:
+                        # Get File Path without folders
+                        file_path = pickle_file.split("\\")[-1]
+                        # Get parameters
+                        classifier_type = file_path.split(" ")[0]
+                        gesture_set = strip(file_path.split("--")[0].split(")")[1])
+                        feature_set = file_path.split("--")[1].split(".pickle")[0].split("_")[0]
+
+                        # Only do classification if same type of feature set ---> Otherwise will not work at all
+                        if feature_set == unseen_feature_set:
+                            # Do classification from csv
+                            self.classification_controller.do_classification_from_csv(
+                                pickle_file=pickle_file,
+                                test_subject=choice_subject_name,
+                                comparison_subject=comparison_subject_name,
+                                classifier_type=classifier_type,
+                                gesture_set=gesture_set,
+                                feature_set=feature_set,
+                                unseen_data=unseen_data
+                            )
+
+            elif choice == '3':
+                for subject_name in subject_name_list:
+                    for pickle_file in pickle_files:
+                        pickle_subject_name = pickle_file.rsplit("(", 1)[1].rsplit(")")[0]
+
+                        if lower(subject_name) == lower(pickle_subject_name):
+                            # Do Classification Test
+                            pass
+
+            elif choice == '4':
+                for subject_name in subject_name_list:
+                    for pickle_file in pickle_files:
+                        pickle_subject_name = pickle_file.rsplit("(", 1)[1].rsplit(")")[0]
+
+                        if lower(subject_name) != lower(pickle_subject_name):
+                            # Do Classification Test
+                            pass
+
+            elif choice == '0':
+                done = True
+                pass
+        pass
+
+    def real_time_classification_test(self):
+        # Shows menu for classifying gesture data
+        done = False
+
+        while done is False:
+            print("------------------------")
+            print("REAL TIME CLASSIFICATION")
+            print("------------------------")
             print("(1) - Single Feature:Kernel Classification Test")
             print("(2) - Multiple Feature:Kernel Classification Test")
             print("(0) - Back")
@@ -157,3 +305,39 @@ class ClassificationMenu:
                 return gesture_name
             else:
                 print("Please try again")
+
+    def prompt_subject_name(self):
+        done = False
+        while done is False:
+            print("~ ~ ~ ~ ~ ~ ~ ~ SUBJECT NAMES ~ ~ ~ ~ ~ ~ ~ ~")
+            subjects = io.read_col('subjects.txt')
+            printer.print_numbered_list(subjects)
+            print("~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~")
+
+            choice = raw_input("Enter the subject name to train from: ")
+
+            if int(choice) > len(subjects) or int(choice) < 1:
+                print("Please try again.")
+            else:
+                subject_name = subjects[int(choice) - 1]
+                print("Chosen Name : " + subject_name)
+                print("")
+                return subject_name
+
+    def get_params(self):
+        pickle_files = io.get_pickle_files()
+        unseen_data_files = io.get_data_files(directory=io.uns_dir)
+        feature_set_list = [
+            'finger-angle-and-palm-distance',
+            'finger-angle-using-bones',
+            'finger-between-distance',
+            'finger-to-palm-distance',
+        ]
+        gesture_set_list = [
+            'COUNTING GESTURES',
+            'STATUS GESTURES',
+        ]
+        subject_name_list = io.read_col("subjects.txt")
+
+
+        return unseen_data_files, pickle_files, feature_set_list, gesture_set_list, subject_name_list

@@ -11,10 +11,11 @@ import leapio.LeapIO as io
 
 
 class Trainer:
-    def __init__(self, subject_name, classifier_name, feature_type):
+    def __init__(self, subject_name, classifier_name, feature_type, gesture_set):
         self.subject_name = subject_name
         self.classifier = None
         self.classifier_name = classifier_name
+        self.gesture_set = gesture_set
         self.feature_type = feature_type
         self.training_acc = 0.0
         self.testing_acc = 0.0
@@ -132,10 +133,11 @@ class RF_Trainer(Trainer):
 
 
 class NN_Trainer(Trainer):
-    def __init__(self, subject_name, feature_type, activation, optimizer):
+    def __init__(self, subject_name, feature_type, activation, optimizer, gesture_set):
         Trainer.__init__(
             self,
             subject_name=subject_name,
+            gesture_set=gesture_set,
             classifier_name="Multi-Layer Perceptron Neural Network",
             feature_type=feature_type
         )
@@ -184,19 +186,20 @@ class NN_Trainer(Trainer):
         pass
 
     def save_classifier(self):
-        pickle_name = "(" + self.subject_name + ") NN_" + self.feature_type + "_" + self.activation + "_" + self.optimizer + ".pickle"
+        pickle_name = "NN (" + self.subject_name + ") " + self.gesture_set + "--" + self.feature_type + "_" + self.activation + "_" + self.optimizer + ".pickle"
         # print("Saving in : " + pickle_name)
         self.save(pickle_name=pickle_name)
         pass
 
 
 class SVM_Trainer(Trainer):
-    def __init__(self, subject_name, feature_type, kernel_type):
+    def __init__(self, subject_name, feature_type, kernel_type, gesture_set):
         Trainer.__init__(
             self,
             subject_name=subject_name,
             classifier_name="Support Vector Machine",
             feature_type=feature_type,
+            gesture_set=gesture_set
         )
 
         self.kernel_type = kernel_type
@@ -230,7 +233,7 @@ class SVM_Trainer(Trainer):
         pass
 
     def save_classifier(self):
-        pickle_name = "(" + self.subject_name + ") SVM_" + self.feature_type + "_" + self.kernel_type + ".pickle"
+        pickle_name = "SVM (" + self.subject_name + ") " + self.gesture_set + "--" + self.feature_type + "_" + self.kernel_type + ".pickle"
         # print("Saving in : " + pickle_name)
         self.save(pickle_name=pickle_name)
         pass

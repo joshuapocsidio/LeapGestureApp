@@ -16,6 +16,7 @@ dat_dir = out_dir + "data\\"
 trd_dir = dat_dir + "trained_data\\"
 sca_dir = dat_dir + "standard_scales\\"
 com_dir = dat_dir + "combined_data\\"
+uns_dir = dat_dir + "unseen_data\\"
 
 sum_dir = out_dir + "summary\\"
 tra_dir = sum_dir + "training\\"
@@ -107,10 +108,10 @@ def load_scale(pickle_name):
 
 
 # SUMMARY FUNCTIONS
-def save_report(subject_name, report_header, line, classifier_type, file_name=None):
+def save_report(subject_name, report_header, line, classifier_type=None, feature_set=None, gesture_set=None, file_name=None):
     # Validate the file name - creates new one if does not exist
     file_name = validate_report_file(file_name=file_name, report_header=report_header, subject_name=subject_name,
-                                     classifier_type=classifier_type)
+                                     classifier_type=classifier_type, feature_set=feature_set, gesture_set=gesture_set)
     # Append to report once validated
     append_to_report(file_name=file_name, line=line)
 
@@ -126,15 +127,15 @@ def append_to_report(file_name, line):
 
 
 # TRAINING SUMMARY FUNCTIONS
-def create_training_report(subject_name, classifier_type):
+def create_training_report(subject_name, feature_set, gesture_set, classifier_type):
     today = date.today()
     now = datetime.now()
 
     date_today = today.strftime("%d-%m-%Y")
     time_now = now.strftime("%H-%M")
 
-    file_name = upper(classifier_type) + "_TRAINING_REPORT " + str(time_now) + "(" + str(date_today) + ").txt"
-    file_name = tra_dir + "(" + subject_name + ") " + file_name
+    file_name = upper(classifier_type) + "_TRAINING_REPORT "
+    file_name = tra_dir + file_name + "(" + subject_name + ") " + gesture_set + "--" + feature_set + "[" + str(time_now) + "(" + str(date_today) + ")].txt"
 
     writer = open(file_name, 'w')
     writer.close()
@@ -143,15 +144,15 @@ def create_training_report(subject_name, classifier_type):
 
 
 # CLASSIFICATION SUMMARY FUNCTIONS
-def create_classification_report(subject_name):
+def create_classification_report(subject_name, classifier_type=None, feature_set=None, gesture_set=None):
     today = date.today()
     now = datetime.now()
 
     date_today = today.strftime("%d-%m-%Y")
     time_now = now.strftime("%H-%M")
 
-    file_name = "CLASSIFICATION_REPORT " + str(time_now) + "(" + str(date_today) + ").txt"
-    file_name = cla_dir + "(" + subject_name + ") " + file_name
+    file_name = upper(classifier_type) + "_CLASSIFICATION_REPORT"
+    file_name = cla_dir + file_name + "(" + subject_name + ") " + gesture_set + "--" + feature_set + "[" + str(time_now) + "(" + str(date_today) + ")].txt"
 
     writer = open(file_name, 'w')
     writer.close()
@@ -177,12 +178,14 @@ def validate_data_file(file_name, labels, verbose=False):
         create_data_file(file_name=file_name, labels=labels)
 
 
-def validate_report_file(report_header, subject_name, file_name, classifier_type):
+def validate_report_file(report_header, subject_name, file_name, classifier_type=None, gesture_set=None, feature_set=None):
     if file_name is None:
         if lower(report_header) == 'training':
-            return create_training_report(subject_name, classifier_type)
+            return create_training_report(subject_name=subject_name, classifier_type=classifier_type,
+                                          gesture_set=gesture_set, feature_set=feature_set)
         elif lower(report_header) == 'classification':
-            return create_classification_report(subject_name)
+            return create_classification_report(subject_name=subject_name, classifier_type=classifier_type,
+                                                gesture_set=gesture_set, feature_set=feature_set)
         else:
             print("Invalid Report Heading")
     else:
@@ -266,7 +269,6 @@ def get_pickle_files(directory=trd_dir):
     extension = '.pickle'
     pickle_file_names = []
 
-    print("DIRECTORY : " + directory)
     for file_name in os.listdir(directory):
         file_name = directory + file_name
         if file_name.endswith(extension):

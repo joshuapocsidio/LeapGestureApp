@@ -104,10 +104,6 @@ def do_acquisition(controller, intervals, checkpoints):
 
     pass
 
-def testing_acquisition(controller):
-    pass
-
-
 def manual_acquisition(controller):
     done = False
     acquisitor = None

@@ -134,29 +134,9 @@ class TrainingMenu:
         print("Chosen File : " + data_file)
         print("")
 
-
-        if combined is False:
-            subject_name = data_file.rsplit("(", 1)[1].rsplit(")")[0]
-            feature_type = strip(data_file.rsplit(")")[1].rsplit(".")[0].rsplit("--")[1])
-        else:
-            title = data_file.split("--")[0]
-            if "COMBINED FULL" in title:
-                raw_input("FULL")
-                subject_name = "All Subjects"
-                gesture_set = "All Gestures"
-                feature_type = strip(data_file.split(".")[0].rsplit("--")[1])
-            elif "COMBINED GESTURES" in title:
-                raw_input("GE")
-                subject_name = data_file.split("(")[1].split(")")[0]
-                gesture_set = "All Gestures"
-                feature_type = strip(data_file.rsplit(")")[1].rsplit(".")[0])
-                pass
-            elif "COMBINED SUBJECTS" in title:
-                raw_input("SU")
-                subject_name = "All Subjects"
-                gesture_set = data_file.split("(")[1].split(")")[0]
-                feature_type = strip(data_file.rsplit(")")[1].rsplit(".")[0])
-                pass
+        subject_name = data_file.rsplit("(", 1)[1].rsplit(")")[0]
+        feature_set = strip(data_file.rsplit(")")[1].rsplit(".")[0].rsplit("--")[1])
+        gesture_set = strip(data_file.split(")")[1].split("--")[0])
 
         file_name = None
         if self.classifier_type == 'svm':
@@ -173,9 +153,10 @@ class TrainingMenu:
             print("Chosen Kernel : " + kernel_type)
             print("")
 
-            training_summary = self.train_auto(csv_file=data_file, subject_name=subject_name, feature_type=feature_type)
+            training_summary = self.train_auto(csv_file=data_file, subject_name=subject_name, feature_type=feature_set)
             file_name = io.save_report(file_name=file_name, subject_name=subject_name, report_header='training',
-                                       line=training_summary, classifier_type=self.classifier_type)
+                                       line=training_summary, classifier_type=self.classifier_type,
+                                       gesture_set=gesture_set, feature_set=feature_set)
         elif self.classifier_type == 'nn':
             activations = ['relu', 'logistic']
             optimizers = ['adam', 'sgd']
@@ -187,13 +168,14 @@ class TrainingMenu:
                     self.params.append(optimizer)
 
                     training_summary = self.train_auto(csv_file=data_file, subject_name=subject_name,
-                                                       feature_type=feature_type)
+                                                       feature_type=feature_set)
                     file_name = io.save_report(file_name=file_name, subject_name=subject_name, report_header='training',
                                                line=training_summary, classifier_type=self.classifier_type)
         elif self.classifier_type == 'dt':
-            training_summary = self.train_auto(csv_file=data_file, subject_name=subject_name, feature_type=feature_type)
+            training_summary = self.train_auto(csv_file=data_file, subject_name=subject_name, feature_type=feature_set)
             file_name = io.save_report(file_name=file_name, subject_name=subject_name, report_header='training',
-                                       line=training_summary, classifier_type=self.classifier_type)
+                                       line=training_summary, classifier_type=self.classifier_type,
+                                       feature_set=feature_set, gesture_set=gesture_set)
         pass
 
     def multi_training(self, combined=False):
@@ -215,16 +197,17 @@ class TrainingMenu:
             for data_file in data_files:
                 subject_name = data_file.rsplit("(", 1)[1].rsplit(")")[0]
                 gesture_set = strip(data_file.rsplit(")")[1].rsplit(".")[0].rsplit("--")[0])
-                feature_type = strip(data_file.rsplit(")")[1].rsplit(".")[0].rsplit("--")[1])
+                feature_set = strip(data_file.rsplit(")")[1].rsplit(".")[0].rsplit("--")[1])
                 for kernel in kernel_list:
                     # Reset params before populating
                     self.params = []
                     self.params.append(kernel)
 
                     training_summary = self.train_auto(csv_file=data_file, subject_name=subject_name,
-                                                       feature_type=feature_type)
+                                                       feature_type=feature_set, gesture_set= gesture_set)
                     file_name = io.save_report(file_name=file_name, subject_name=subject_name, report_header='training',
-                                               line=training_summary, classifier_type=self.classifier_type)
+                                               line=training_summary, classifier_type=self.classifier_type,
+                                               feature_set=feature_set, gesture_set=gesture_set)
                     pass
             pass
         # NN Multi Training
@@ -235,7 +218,7 @@ class TrainingMenu:
             for data_file in data_files:
                 subject_name = data_file.rsplit("(", 1)[1].rsplit(")")[0]
                 gesture_set = strip(data_file.rsplit(")")[1].rsplit(".")[0].rsplit("--")[0])
-                feature_type = strip(data_file.rsplit(")")[1].rsplit(".")[0].rsplit("--")[1])
+                feature_set = strip(data_file.rsplit(")")[1].rsplit(".")[0].rsplit("--")[1])
 
                 for activation in activations:
                     for optimizer in optimizers:
@@ -245,17 +228,19 @@ class TrainingMenu:
                         self.params.append(optimizer)
 
                         training_summary = self.train_auto(csv_file=data_file, subject_name=subject_name,
-                                                           feature_type=feature_type)
-                        file_name = io.save_report(file_name=file_name, subject_name=subject_name,
-                                                   report_header='training',
-                                                   line=training_summary, classifier_type=self.classifier_type)
+                                                           feature_type=feature_set, gesture_set=gesture_set)
+                        file_name = io.save_report(file_name=file_name, subject_name=subject_name, report_header='training',
+                                                   line=training_summary, classifier_type=self.classifier_type,
+                                                   feature_set=feature_set, gesture_set=gesture_set
+                                                   )
             pass
 
-    def train_auto(self, csv_file, subject_name, feature_type):
+    def train_auto(self, csv_file, subject_name, feature_type, gesture_set):
         results = DataOptimizer.obtain_optimal_classifier(
             csv_file_name=csv_file,
             subject_name=subject_name,
             feature_type=feature_type,
+            gesture_set=gesture_set,
             classifier_type=self.classifier_type,
             params=self.params
         )
@@ -267,14 +252,15 @@ class TrainingMenu:
 
         return training_summary
 
-    def train_manual(self, csv_file, subject_name, feature_type):
+    def train_manual(self, csv_file, subject_name, feature_type, gesture_set):
 
         results = DataOptimizer.obtain_optimal_classifier(
             csv_file_name=csv_file,
             subject_name=subject_name,
             feature_type=feature_type,
             params=self.params,
-            classifier_type=self.classifier_type
+            classifier_type=self.classifier_type,
+            gesture_set=gesture_set
         )
 
         optimal_classifier = results[0]
@@ -336,7 +322,7 @@ class TrainingMenu:
                 feature_set = file_item[0].split("--")[1].split(".")[0]
 
                 # Construct file name
-                file_name = io.com_dir + "COMBINED GESTURES--(" + subject + ") " + feature_set + ".csv"
+                file_name = io.com_dir + "(" + subject + ") " + "COMBINED GESTURES--" + feature_set + ".csv"
 
                 # Create the file
                 self.file_creation(group=file_item, file_name=file_name)
@@ -384,7 +370,7 @@ class TrainingMenu:
                 feature_set = file_item[0].split("--")[1].split(".")[0]
 
                 # Construct file name
-                file_name = io.com_dir + "COMBINED SUBJECTS--(" + gesture_set + ") " + feature_set + ".csv"
+                file_name = io.com_dir + "(COMBINED SUBJECTS) " + gesture_set + "--" + feature_set + ".csv"
 
                 # Create the file
                 self.file_creation(group=file_item, file_name=file_name)
@@ -414,7 +400,7 @@ class TrainingMenu:
             feature_set = file_item.split("--")[1].split(".")[0]
 
             # Construct file name
-            file_name = io.com_dir + "COMBINED FULL--" + feature_set + ".csv"
+            file_name = io.com_dir + "(COMBINED SUBJECTS) " + "COMBINED GESTURES--" + feature_set + ".csv"
 
             # Create the file
             self.file_creation(single_item=file_item, file_name=file_name, single=True)

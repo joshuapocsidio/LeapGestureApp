@@ -5,7 +5,7 @@ from statistics import mean
 from controller.LeapDataTrainer import SVM_Trainer, NN_Trainer
 
 
-def optimal_svm(csv_file_name, subject_name, feature_type, kernel_type, iterations=10):
+def optimal_svm(csv_file_name, subject_name, feature_type, gesture_set, kernel_type, iterations=10):
     index = 1
     trainer_list = []
     train_accuracy_list = []
@@ -14,7 +14,7 @@ def optimal_svm(csv_file_name, subject_name, feature_type, kernel_type, iteratio
 
     while index <= iterations:
         # Initialize Leap Trainer with kernel type and classifier name
-        trainer = SVM_Trainer(kernel_type=kernel_type, subject_name=subject_name, feature_type=feature_type)
+        trainer = SVM_Trainer(kernel_type=kernel_type, subject_name=subject_name, feature_type=feature_type, gesture_set=gesture_set)
         # Initialise timer and execute training
         start_time = time.time()
         trainer.train(csv_file_name)
@@ -42,7 +42,7 @@ def optimal_svm(csv_file_name, subject_name, feature_type, kernel_type, iteratio
     return trainer_list, time_list, train_accuracy_list, test_accuracy_list
 
 
-def optimal_nn(csv_file_name, subject_name, feature_type, activation, optimizer):
+def optimal_nn(csv_file_name, subject_name, feature_type, gesture_set, activation, optimizer):
     index = 1
     trainer_list = []
     train_accuracy_list = []
@@ -51,7 +51,7 @@ def optimal_nn(csv_file_name, subject_name, feature_type, activation, optimizer)
 
     while index <= 5:
         # Initialize Leap Trainer with kernel type and classifier name
-        trainer = NN_Trainer(subject_name=subject_name, feature_type=feature_type, activation=activation, optimizer=optimizer)
+        trainer = NN_Trainer(subject_name=subject_name, feature_type=feature_type, gesture_set=gesture_set, activation=activation, optimizer=optimizer)
         # Initialise timer and execute training
         start_time = time.time()
         trainer.train(csv_file=csv_file_name)
@@ -80,7 +80,7 @@ def optimal_nn(csv_file_name, subject_name, feature_type, activation, optimizer)
 
 
 # Optimizes classifier based
-def obtain_optimal_classifier(csv_file_name, subject_name, classifier_type, feature_type, params):
+def obtain_optimal_classifier(csv_file_name, subject_name, classifier_type, feature_type, gesture_set, params):
 
     trainer_list = []
     train_accuracy_list = []
@@ -95,14 +95,16 @@ def obtain_optimal_classifier(csv_file_name, subject_name, classifier_type, feat
                        subject_name=subject_name,
                        feature_type=feature_type,
                        activation=activation,
-                       optimizer=optimizer)
+                       optimizer=optimizer,
+                       gesture_set=gesture_set)
     elif classifier_type == 'svm':
         kernel_type = params[0]
         trainer_list, time_list, train_accuracy_list, test_accuracy_list = \
             optimal_svm(csv_file_name=csv_file_name,
                         subject_name=subject_name,
                         feature_type=feature_type,
-                        kernel_type=kernel_type)
+                        kernel_type=kernel_type,
+                        gesture_set=gesture_set)
     print("")
 
     # Get optimization results
