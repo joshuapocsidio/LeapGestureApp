@@ -15,6 +15,7 @@ out_dir = os.path.dirname(os.getcwd()) + "\output\\"
 dat_dir = out_dir + "data\\"
 trd_dir = dat_dir + "trained_data\\"
 sca_dir = dat_dir + "standard_scales\\"
+com_dir = dat_dir + "combined_data\\"
 
 sum_dir = out_dir + "summary\\"
 tra_dir = sum_dir + "training\\"
@@ -244,13 +245,19 @@ def create_gesture_database(file_name):
 
 
 # Returns all file names inside current directory (or given directory if omitted) with matching extension
-def get_data_files(directory=dat_dir):
+def get_data_files(directory=dat_dir, combined=False):
     extension = '.csv'
     data_file_names = []
-    for file_name in os.listdir(directory):
-        file_name = directory + file_name
-        if file_name.endswith(extension):
-            data_file_names.append(file_name)
+    if combined is True:
+        for file_name in os.listdir(com_dir):
+            file_name = com_dir + file_name
+            if file_name.endswith(extension):
+                data_file_names.append(file_name)
+    else:
+        for file_name in os.listdir(directory):
+            file_name = directory + file_name
+            if file_name.endswith(extension):
+                data_file_names.append(file_name)
 
     return data_file_names
 
@@ -291,3 +298,17 @@ def read_col(file_name, index=0, delimiter=','):
         data_list.append(data)
 
     return data_list
+
+def read_all(file_name):
+    reader = open(file_name, 'r')
+
+    lines = reader.readlines()
+
+    return lines
+
+def append_to_file(file_name, lines):
+    writer = open(file_name, 'a')
+    writer.write(lines)
+    writer.write("\n")
+    writer.close()
+    pass

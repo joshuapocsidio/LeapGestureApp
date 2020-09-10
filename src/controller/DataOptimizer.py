@@ -42,7 +42,7 @@ def optimal_svm(csv_file_name, subject_name, feature_type, kernel_type, iteratio
     return trainer_list, time_list, train_accuracy_list, test_accuracy_list
 
 
-def optimal_nn(csv_file_name, subject_name, feature_type, activation, optimizer, epochs=10000):
+def optimal_nn(csv_file_name, subject_name, feature_type, activation, optimizer):
     index = 1
     trainer_list = []
     train_accuracy_list = []
@@ -80,7 +80,7 @@ def optimal_nn(csv_file_name, subject_name, feature_type, activation, optimizer,
 
 
 # Optimizes classifier based
-def obtain_optimal_classifier(csv_file_name, subject_name, classifier_type, feature_type, kernel_type=None, activation=None, optimizer=None):
+def obtain_optimal_classifier(csv_file_name, subject_name, classifier_type, feature_type, params):
 
     trainer_list = []
     train_accuracy_list = []
@@ -88,6 +88,8 @@ def obtain_optimal_classifier(csv_file_name, subject_name, classifier_type, feat
     time_list = []
 
     if classifier_type == 'nn':
+        activation = params[0]
+        optimizer = params[1]
         trainer_list, time_list, train_accuracy_list, test_accuracy_list = \
             optimal_nn(csv_file_name=csv_file_name,
                        subject_name=subject_name,
@@ -95,6 +97,7 @@ def obtain_optimal_classifier(csv_file_name, subject_name, classifier_type, feat
                        activation=activation,
                        optimizer=optimizer)
     elif classifier_type == 'svm':
+        kernel_type = params[0]
         trainer_list, time_list, train_accuracy_list, test_accuracy_list = \
             optimal_svm(csv_file_name=csv_file_name,
                         subject_name=subject_name,

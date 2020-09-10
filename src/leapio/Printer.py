@@ -8,5 +8,5 @@ def print_list(str_list):
 def print_numbered_list(str_list, starting_index=1):
     i = starting_index
     for item in str_list:
-        print(str(i) + ' - ' + item)
+        print(str(i) + ' - ' + str(item))
         i += 1
