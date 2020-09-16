@@ -1,7 +1,7 @@
 from string import strip
 
 import leapio.LeapIO as io
-from controller import DataOptimizer
+from controller import LeapDataOptimizer
 from leapio import Printer
 
 
@@ -295,7 +295,7 @@ class TrainingMenu:
                                                feature_set=feature_set, gesture_set=gesture_set)
 
     def train_auto(self, csv_file, subject_name, feature_type, gesture_set):
-        results = DataOptimizer.obtain_optimal_classifier(
+        results = LeapDataOptimizer.obtain_optimal_classifier(
             csv_file_name=csv_file,
             subject_name=subject_name,
             feature_type=feature_type,
@@ -314,7 +314,7 @@ class TrainingMenu:
     ''' MIGHT REMOVE THIS FUNCTIONALITY '''
     def train_manual(self, csv_file, subject_name, feature_type, gesture_set):
 
-        results = DataOptimizer.obtain_optimal_classifier(
+        results = LeapDataOptimizer.obtain_optimal_classifier(
             csv_file_name=csv_file,
             subject_name=subject_name,
             feature_type=feature_type,
