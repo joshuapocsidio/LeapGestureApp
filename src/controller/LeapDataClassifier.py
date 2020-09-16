@@ -3,7 +3,7 @@ from string import lower
 
 from controller.LeapDataAcquisitor import LeapDataAcquisitor
 from leapio import LeapIO as io
-from controller.LeapDataTrainer import NN_Trainer, SVM_Trainer, DT_Trainer, RF_Trainer
+from controller.LeapDataTrainer import NN_Trainer, SVM_Trainer, DT_Trainer
 from leapio import Printer as printer
 
 

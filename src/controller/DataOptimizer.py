@@ -2,7 +2,7 @@ import time
 
 from statistics import mean
 
-from controller.LeapDataTrainer import SVM_Trainer, NN_Trainer
+from controller.LeapDataTrainer import SVM_Trainer, NN_Trainer, DT_Trainer
 
 
 def optimal_svm(csv_file_name, subject_name, feature_type, gesture_set, kernel_type, iterations=10):
@@ -14,7 +14,8 @@ def optimal_svm(csv_file_name, subject_name, feature_type, gesture_set, kernel_t
 
     while index <= iterations:
         # Initialize Leap Trainer with kernel type and classifier name
-        trainer = SVM_Trainer(kernel_type=kernel_type, subject_name=subject_name, feature_type=feature_type, gesture_set=gesture_set)
+        trainer = SVM_Trainer(kernel_type=kernel_type, subject_name=subject_name, feature_type=feature_type,
+                              gesture_set=gesture_set)
         # Initialise timer and execute training
         start_time = time.time()
         trainer.train(csv_file_name)
@@ -42,16 +43,17 @@ def optimal_svm(csv_file_name, subject_name, feature_type, gesture_set, kernel_t
     return trainer_list, time_list, train_accuracy_list, test_accuracy_list
 
 
-def optimal_nn(csv_file_name, subject_name, feature_type, gesture_set, activation, optimizer):
+def optimal_nn(csv_file_name, subject_name, feature_type, gesture_set, activation, iterations=5):
     index = 1
     trainer_list = []
     train_accuracy_list = []
     test_accuracy_list = []
     time_list = []
 
-    while index <= 5:
+    while index <= iterations:
         # Initialize Leap Trainer with kernel type and classifier name
-        trainer = NN_Trainer(subject_name=subject_name, feature_type=feature_type, gesture_set=gesture_set, activation=activation, optimizer=optimizer)
+        trainer = NN_Trainer(subject_name=subject_name, feature_type=feature_type, gesture_set=gesture_set,
+                             activation=activation)
         # Initialise timer and execute training
         start_time = time.time()
         trainer.train(csv_file=csv_file_name)
@@ -79,9 +81,46 @@ def optimal_nn(csv_file_name, subject_name, feature_type, gesture_set, activatio
     return trainer_list, time_list, train_accuracy_list, test_accuracy_list
 
 
-# Optimizes classifier based
-def obtain_optimal_classifier(csv_file_name, subject_name, classifier_type, feature_type, gesture_set, params):
+def optimal_dt(csv_file_name, subject_name, feature_type, criterion_type, gesture_set, iterations=10):
+    index = 1
+    trainer_list = []
+    train_accuracy_list = []
+    test_accuracy_list = []
+    time_list = []
 
+    while index <= iterations:
+        # Initialize Leap Trainer with kernel type and classifier name
+        trainer = DT_Trainer(criterion_type=criterion_type, subject_name=subject_name, feature_type=feature_type,
+                             gesture_set=gesture_set)
+        # Initialise timer and execute training
+        start_time = time.time()
+        trainer.train(csv_file_name)
+        end_time = time.time()
+
+        # Obtain performance results
+        training_time = round(end_time - start_time, 5)
+        train_accuracy = round(trainer.training_acc * 100.0, 3)
+        test_accuracy = round(trainer.testing_acc * 100.0, 3)
+
+        # Append trainer and performance results to list
+        trainer_list.append(trainer)
+        time_list.append(training_time)
+        train_accuracy_list.append(train_accuracy)
+        test_accuracy_list.append(test_accuracy)
+
+        # Print result of this iteration on console
+        iteration_result = "Classifier #" + str(index) + " - (" + str(train_accuracy) + "%, " + str(
+            test_accuracy) + "%) :: " + str(
+            training_time) + " seconds"
+        print(iteration_result)
+
+        index += 1
+
+    return trainer_list, time_list, train_accuracy_list, test_accuracy_list
+
+
+# Optimizes classifier based on classifier types
+def obtain_optimal_classifier(csv_file_name, subject_name, classifier_type, feature_type, gesture_set, params):
     trainer_list = []
     train_accuracy_list = []
     test_accuracy_list = []
@@ -89,13 +128,11 @@ def obtain_optimal_classifier(csv_file_name, subject_name, classifier_type, feat
 
     if classifier_type == 'nn':
         activation = params[0]
-        optimizer = params[1]
         trainer_list, time_list, train_accuracy_list, test_accuracy_list = \
             optimal_nn(csv_file_name=csv_file_name,
                        subject_name=subject_name,
                        feature_type=feature_type,
                        activation=activation,
-                       optimizer=optimizer,
                        gesture_set=gesture_set)
     elif classifier_type == 'svm':
         kernel_type = params[0]
@@ -105,6 +142,14 @@ def obtain_optimal_classifier(csv_file_name, subject_name, classifier_type, feat
                         feature_type=feature_type,
                         kernel_type=kernel_type,
                         gesture_set=gesture_set)
+    elif classifier_type == 'dt':
+        criterion_type = params[0]
+        trainer_list, time_list, train_accuracy_list, test_accuracy_list = \
+            optimal_dt(csv_file_name=csv_file_name,
+                       subject_name=subject_name,
+                       feature_type=feature_type,
+                       criterion_type=criterion_type,
+                       gesture_set=gesture_set)
     print("")
 
     # Get optimization results
@@ -158,7 +203,6 @@ def analyze_classifiers(trainer_list, time_list, train_accuracy_list, test_accur
     optimal_test_acc = test_accuracy_list[index_optimal]
     optimal_penalty = optimal_test_acc - optimal_train_acc
 
-
     # Get the optimal classifier
     optimal_classifier = trainer_list[index_optimal]
 
@@ -181,7 +225,8 @@ def analyze_classifiers(trainer_list, time_list, train_accuracy_list, test_accur
     summary += "ACCURACY(BEST)      : " + \
                str(best_accuracy) + "% with Training = " + \
                str(optimal_train_acc) + "% and Testing = " + \
-               str(optimal_test_acc) + "%" + " (" + ("" if optimal_penalty < 0.0 else "+") + str(optimal_penalty) + "%)\n"
+               str(optimal_test_acc) + "%" + " (" + ("" if optimal_penalty < 0.0 else "+") + str(
+        optimal_penalty) + "%)\n"
     summary += "ACCURACY(AVERAGE)   : " + str(average_accuracy) + "%\n\n"
 
     summary += "OPTIMAL CLASSIFIER  : Classifier #" + str((index_optimal + 1)) + "\n"
@@ -189,10 +234,15 @@ def analyze_classifiers(trainer_list, time_list, train_accuracy_list, test_accur
     summary += "OPTIMAL PENALTY     : " + ("" if optimal_penalty < 0.0 else "+") + str(optimal_penalty) + "%\n\n"
 
     summary += " - - - - - - - - HYPER PARAMETERS - - - - - - - - - \n"
-    if hasattr(optimal_classifier, 'kernel_type') and hasattr(optimal_classifier, 'kernel_type'):
-        summary += "KERNEL              : " + optimal_classifier.kernel_type + "\n"
-        summary += "C_PARAM             : " + str(optimal_classifier.c_param) + "\n\n"
+    # Support Vector Machine
+    if hasattr(optimal_classifier, 'kernel_type'):
+        if hasattr(optimal_classifier, 'kernel_type'):
+            if hasattr(optimal_classifier, 'gamma'):
+                summary += "KERNEL              : " + optimal_classifier.kernel_type + "\n"
+                summary += "C_PARAM             : " + str(optimal_classifier.c_param) + "\n"
+                summary += "GAMMA               : " + str(optimal_classifier.gamma) + "\n\n"
 
+    # Neural Network
     if hasattr(optimal_classifier, 'batch_size'):
         if hasattr(optimal_classifier, 'n_layers'):
             if hasattr(optimal_classifier, 'n_layer_nodes'):
@@ -204,6 +254,14 @@ def analyze_classifiers(trainer_list, time_list, train_accuracy_list, test_accur
                         summary += "HIDDEN_LAYERS       : " + str(optimal_classifier.n_layers) + "\n"
                         summary += "HIDDEN_LAYER_NODES  : " + str(optimal_classifier.n_layer_nodes) + "\n"
                         summary += "LEARNING RATE       : " + str(optimal_classifier.learning_rate) + "\n\n"
+
+    # Decision Trees
+    if hasattr(optimal_classifier, 'splitter'):
+        if hasattr(optimal_classifier, 'max_leaf_nodes'):
+            if hasattr(optimal_classifier, 'min_samples_split'):
+                summary += "SPLITTER            : " + str(optimal_classifier.splitter) + "\n"
+                summary += "MAX LEAF NODES      : " + str(optimal_classifier.max_leaf_nodes) + "\n"
+                summary += "MIN SAMPLES SPLIT   : " + str(optimal_classifier.min_samples_split) + "\n\n"
 
     summary += "* * * * * * * * * *\n"
 

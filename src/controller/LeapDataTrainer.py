@@ -74,16 +74,20 @@ class Trainer:
 
         return X_train, X_test
 
+
 class DT_Trainer(Trainer):
-    def __init__(self, subject_name, feature_type, classifier_name):
+    def __init__(self, subject_name, feature_type, criterion_type, gesture_set):
         Trainer.__init__(
             self,
-            subject_name,
-            classifier_name,
-            feature_type
+            subject_name=subject_name,
+            gesture_set=gesture_set,
+            classifier_name="Decision Tree",
+            feature_type=feature_type,
         )
-        self.criterion = None
         self.splitter = None
+        self.criterion_type = criterion_type
+        self.max_leaf_nodes = 0
+        self.min_samples_split = 0
         pass
 
     def train(self, csv_file):
@@ -95,9 +99,11 @@ class DT_Trainer(Trainer):
 
         # Initialize configurations of hyper parameters
         grid_parameters = {
-            'criterion': ['gini', 'entropy'],
             'splitter': ['best', 'random'],
+            'max_leaf_nodes': list(range(2, 100)),
+            'min_samples_split': [2, 3, 4]
         }
+
         # Initialize hyper parameter tuning grid search
         grid_classifier = GridSearchCV(classifier, grid_parameters, n_jobs=4, cv=5)
         # Fit the model
@@ -107,33 +113,21 @@ class DT_Trainer(Trainer):
         self.testing_acc = grid_classifier.score(X_test, y_test)
         self.classifier = grid_classifier.best_estimator_
         self.classifier.fit(X_train, y_train)
-        # print(self.classifier.score(X_test, y_test))
 
         # Hyper Parameters
-        self.criterion = grid_classifier.best_params_['criterion']
         self.splitter = grid_classifier.best_params_['splitter']
+        self.max_leaf_nodes = grid_classifier.best_params_['max_leaf_nodes']
+        self.min_samples_split = grid_classifier.best_params_['min_samples_split']
         pass
 
     def save_classifier(self):
-        pickle_name = "(" + self.subject_name + ") SVM_" + self.feature_type + "_" + self.criterion + "_" + self.splitter + ".pickle"
+        pickle_name = "(" + self.subject_name + ") SVM_" + self.feature_type + "_" + self.criterion_type + ".pickle"
         # print("Saving in : " + pickle_name)
         self.save(pickle_name=pickle_name)
         pass
 
-
-class RF_Trainer(Trainer):
-    def __init__(self, subject_name, feature_type, classifier_name):
-        Trainer.__init__(
-            self,
-            subject_name,
-            classifier_name,
-            feature_type
-        )
-        pass
-
-
 class NN_Trainer(Trainer):
-    def __init__(self, subject_name, feature_type, activation, optimizer, gesture_set):
+    def __init__(self, subject_name, feature_type, activation, gesture_set):
         Trainer.__init__(
             self,
             subject_name=subject_name,
@@ -143,7 +137,7 @@ class NN_Trainer(Trainer):
         )
         self.batch_size = 0
         self.activation = activation
-        self.optimizer = optimizer
+        self.optimizer = None
         self.n_layers = 0
         self.n_layer_nodes = [()]
         self.learning_rate = 0.0
@@ -160,13 +154,14 @@ class NN_Trainer(Trainer):
             shuffle=True,
             verbose=False,
             batch_size=self.batch_size,
-            max_iter=1000
+            max_iter=1000,
         )
 
         # Initialize configurations of hyper parameters
         grid_parameters = {
             'learning_rate_init': [0.01, 0.05, 0.1, 0.5],
-            'hidden_layer_sizes': [(64,), (128,), (64, 64,), (128, 128,), (64, 128, 128, 64)]
+            'hidden_layer_sizes': [(64,), (128,), (64, 64,), (128, 128,), (64, 128, 128, 64)],
+            'solver': ['adam', 'sgd']
         }
         # Initialize hyper parameter tuning grid search
         grid_classifier = GridSearchCV(classifier, grid_parameters, n_jobs=4, cv=5)
@@ -183,10 +178,11 @@ class NN_Trainer(Trainer):
         self.n_layers = len(grid_classifier.best_params_['hidden_layer_sizes'])
         self.n_layer_nodes = grid_classifier.best_params_['hidden_layer_sizes']
         self.learning_rate = grid_classifier.best_params_['learning_rate_init']
+        self.optimizer = grid_classifier.best_params_['solver']
         pass
 
     def save_classifier(self):
-        pickle_name = "NN (" + self.subject_name + ") " + self.gesture_set + "--" + self.feature_type + "_" + self.activation + "_" + self.optimizer + ".pickle"
+        pickle_name = "NN (" + self.subject_name + ") " + self.gesture_set + "--" + self.feature_type + "_" + self.activation + ".pickle"
         # print("Saving in : " + pickle_name)
         self.save(pickle_name=pickle_name)
         pass
@@ -204,6 +200,7 @@ class SVM_Trainer(Trainer):
 
         self.kernel_type = kernel_type
         self.c_param = 0.1
+        self.gamma = 0.001
         pass
 
     def train(self, csv_file):
@@ -216,7 +213,9 @@ class SVM_Trainer(Trainer):
         # Initialize configurations of hyper parameters
         grid_parameters = {
             'C': [0.1, 1.0, 10.0],
+            'gamma': [0.001, 0.01, 0.1, 1],
         }
+
         # Initialize hyper parameter tuning grid search
         grid_classifier = GridSearchCV(classifier, grid_parameters, n_jobs=4, cv=5)
         # Fit the model
@@ -230,6 +229,7 @@ class SVM_Trainer(Trainer):
 
         # Hyper Parameters
         self.c_param = grid_classifier.best_params_['C']
+        self.gamma = grid_classifier.best_params_['gamma']
         pass
 
     def save_classifier(self):

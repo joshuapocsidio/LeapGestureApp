@@ -44,6 +44,9 @@ class TrainingMenu:
                 self.prompt_training_mode()
                 pass
             elif choice == '4':
+                self.all_training()
+                pass
+            elif choice == '5':
                 self.prompt_create_sets()
                 pass
             elif choice == '0':
@@ -82,7 +85,6 @@ class TrainingMenu:
                 print("Please try again.")
 
         pass
-
 
     def prompt_training_mode(self):
         done = False
@@ -141,46 +143,43 @@ class TrainingMenu:
         file_name = None
         if self.classifier_type == 'svm':
             kernel_list = io.read_col("kernels.txt")
-            print("* List of Kernels *")
-            Printer.print_numbered_list(kernel_list)
+            for kernel in kernel_list:
+                # Reset params before populating
+                self.params = []
+                self.params.append(kernel)
 
-            choice = raw_input("Enter the kernel to use for training: ")
-
-            kernel_type = kernel_list[int(choice) - 1]
-            self.params = []
-            self.params.append(kernel_type)
-
-            print("Chosen Kernel : " + kernel_type)
-            print("")
-
-            training_summary = self.train_auto(csv_file=data_file, subject_name=subject_name, feature_type=feature_set)
-            file_name = io.save_report(file_name=file_name, subject_name=subject_name, report_header='training',
-                                       line=training_summary, classifier_type=self.classifier_type,
-                                       gesture_set=gesture_set, feature_set=feature_set)
+                training_summary = self.train_auto(csv_file=data_file, subject_name=subject_name,
+                                                   feature_type=feature_set, gesture_set=gesture_set)
+                file_name = io.save_report(file_name=file_name, subject_name=subject_name, report_header='training',
+                                           line=training_summary, classifier_type=self.classifier_type,
+                                           gesture_set=gesture_set, feature_set=feature_set)
         elif self.classifier_type == 'nn':
             activations = ['relu', 'logistic']
-            optimizers = ['adam', 'sgd']
             for activation in activations:
-                for optimizer in optimizers:
-                    # Reset params before populating
-                    self.params = []
-                    self.params.append(activation)
-                    self.params.append(optimizer)
+                # Reset params before populating
+                self.params = []
+                self.params.append(activation)
 
-                    training_summary = self.train_auto(csv_file=data_file, subject_name=subject_name,
-                                                       feature_type=feature_set)
-                    file_name = io.save_report(file_name=file_name, subject_name=subject_name, report_header='training',
-                                               line=training_summary, classifier_type=self.classifier_type)
+                training_summary = self.train_auto(csv_file=data_file, subject_name=subject_name,
+                                                   feature_type=feature_set)
+                file_name = io.save_report(file_name=file_name, subject_name=subject_name, report_header='training',
+                                           line=training_summary, classifier_type=self.classifier_type)
         elif self.classifier_type == 'dt':
-            training_summary = self.train_auto(csv_file=data_file, subject_name=subject_name, feature_type=feature_set)
-            file_name = io.save_report(file_name=file_name, subject_name=subject_name, report_header='training',
-                                       line=training_summary, classifier_type=self.classifier_type,
-                                       feature_set=feature_set, gesture_set=gesture_set)
+            criterions = ['gini', 'entropy']
+            for criterion in criterions:
+                # Reset params before populating
+                self.params = []
+                self.params.append(criterion)
+
+                training_summary = self.train_auto(csv_file=data_file, subject_name=subject_name,
+                                                   feature_type=feature_set)
+                file_name = io.save_report(file_name=file_name, subject_name=subject_name, report_header='training',
+                                           line=training_summary, classifier_type=self.classifier_type,
+                                           feature_set=feature_set, gesture_set=gesture_set)
         pass
 
     def multi_training(self, combined=False):
         data_files = io.get_data_files(combined=combined)
-        kernel_list = io.read_col("kernels.txt")
         file_name = None
 
         print("")
@@ -188,52 +187,112 @@ class TrainingMenu:
         Printer.print_numbered_list(data_files)
         print("")
 
-        # SVM Multi Training
-        if self.classifier_type == 'svm':
-            "* List of Kernels for Training *"
-            Printer.print_numbered_list(kernel_list)
-            print("")
+        for data_file in data_files:
+            subject_name = data_file.rsplit("(", 1)[1].rsplit(")")[0]
+            gesture_set = strip(data_file.rsplit(")")[1].rsplit(".")[0].rsplit("--")[0])
+            feature_set = strip(data_file.rsplit(")")[1].rsplit(".")[0].rsplit("--")[1])
+            # SVM Multi Training
+            if self.classifier_type == 'svm':
+                kernel_list = ['linear', 'poly', 'rbf', 'sigmoid']
 
-            for data_file in data_files:
-                subject_name = data_file.rsplit("(", 1)[1].rsplit(")")[0]
-                gesture_set = strip(data_file.rsplit(")")[1].rsplit(".")[0].rsplit("--")[0])
-                feature_set = strip(data_file.rsplit(")")[1].rsplit(".")[0].rsplit("--")[1])
                 for kernel in kernel_list:
                     # Reset params before populating
                     self.params = []
                     self.params.append(kernel)
 
                     training_summary = self.train_auto(csv_file=data_file, subject_name=subject_name,
-                                                       feature_type=feature_set, gesture_set= gesture_set)
+                                                       feature_type=feature_set, gesture_set=gesture_set)
                     file_name = io.save_report(file_name=file_name, subject_name=subject_name, report_header='training',
                                                line=training_summary, classifier_type=self.classifier_type,
                                                feature_set=feature_set, gesture_set=gesture_set)
-                    pass
-            pass
-        # NN Multi Training
-        elif self.classifier_type == 'nn':
-            activations = ['relu', 'logistic']
-            optimizers = ['adam', 'sgd']
-
-            for data_file in data_files:
-                subject_name = data_file.rsplit("(", 1)[1].rsplit(")")[0]
-                gesture_set = strip(data_file.rsplit(")")[1].rsplit(".")[0].rsplit("--")[0])
-                feature_set = strip(data_file.rsplit(")")[1].rsplit(".")[0].rsplit("--")[1])
+                pass
+            # NN Multi Training
+            elif self.classifier_type == 'nn':
+                activations = ['relu', 'logistic']
 
                 for activation in activations:
-                    for optimizer in optimizers:
-                        # Reset params before populating
-                        self.params = []
-                        self.params.append(activation)
-                        self.params.append(optimizer)
+                    # Reset params before populating
+                    self.params = []
+                    self.params.append(activation)
 
-                        training_summary = self.train_auto(csv_file=data_file, subject_name=subject_name,
-                                                           feature_type=feature_set, gesture_set=gesture_set)
-                        file_name = io.save_report(file_name=file_name, subject_name=subject_name, report_header='training',
-                                                   line=training_summary, classifier_type=self.classifier_type,
-                                                   feature_set=feature_set, gesture_set=gesture_set
-                                                   )
-            pass
+                    training_summary = self.train_auto(csv_file=data_file, subject_name=subject_name,
+                                                       feature_type=feature_set, gesture_set=gesture_set)
+                    file_name = io.save_report(file_name=file_name, subject_name=subject_name, report_header='training',
+                                               line=training_summary, classifier_type=self.classifier_type,
+                                               feature_set=feature_set, gesture_set=gesture_set)
+                pass
+            # Decision Tree Multi Training
+            elif self.classifier_type == 'dt':
+                criterions = ['gini', 'entropy']
+
+                for criterion in criterions:
+                    # Reset params before populating
+                    self.params = []
+                    self.params.append(criterion)
+
+                    training_summary = self.train_auto(csv_file=data_file, subject_name=subject_name,
+                                                       feature_type=feature_set, gesture_set=gesture_set)
+                    file_name = io.save_report(file_name=file_name, subject_name=subject_name, report_header='training',
+                                               line=training_summary, classifier_type=self.classifier_type,
+                                               feature_set=feature_set, gesture_set=gesture_set)
+
+    def all_training(self):
+        file_name = None
+        # Obtain all data files
+        sep_data_files = io.get_data_files(combined=False)
+        com_data_files = io.get_data_files(combined=True)
+        # Join the two lists
+        data_files = sep_data_files + com_data_files
+
+        for data_file in data_files:
+            subject_name = data_file.rsplit("(", 1)[1].rsplit(")")[0]
+            gesture_set = strip(data_file.rsplit(")")[1].rsplit(".")[0].rsplit("--")[0])
+            feature_set = strip(data_file.rsplit(")")[1].rsplit(".")[0].rsplit("--")[1])
+
+            # SVM Multi Training
+            if self.classifier_type == 'svm':
+                kernel_list = ['linear', 'poly', 'rbf', 'sigmoid']
+
+                for kernel in kernel_list:
+                    # Reset params before populating
+                    self.params = []
+                    self.params.append(kernel)
+
+                    training_summary = self.train_auto(csv_file=data_file, subject_name=subject_name,
+                                                       feature_type=feature_set, gesture_set=gesture_set)
+                    file_name = io.save_report(file_name=file_name, subject_name=subject_name, report_header='training',
+                                               line=training_summary, classifier_type=self.classifier_type,
+                                               feature_set=feature_set, gesture_set=gesture_set)
+                pass
+            # NN Multi Training
+            elif self.classifier_type == 'nn':
+                activations = ['relu', 'logistic']
+
+                for activation in activations:
+                    # Reset params before populating
+                    self.params = []
+                    self.params.append(activation)
+
+                    training_summary = self.train_auto(csv_file=data_file, subject_name=subject_name,
+                                                       feature_type=feature_set, gesture_set=gesture_set)
+                    file_name = io.save_report(file_name=file_name, subject_name=subject_name, report_header='training',
+                                               line=training_summary, classifier_type=self.classifier_type,
+                                               feature_set=feature_set, gesture_set=gesture_set)
+                pass
+            # Decision Tree Multi Training
+            elif self.classifier_type == 'dt':
+                criterions = ['gini', 'entropy']
+
+                for criterion in criterions:
+                    # Reset params before populating
+                    self.params = []
+                    self.params.append(criterion)
+
+                    training_summary = self.train_auto(csv_file=data_file, subject_name=subject_name,
+                                                       feature_type=feature_set, gesture_set=gesture_set)
+                    file_name = io.save_report(file_name=file_name, subject_name=subject_name, report_header='training',
+                                               line=training_summary, classifier_type=self.classifier_type,
+                                               feature_set=feature_set, gesture_set=gesture_set)
 
     def train_auto(self, csv_file, subject_name, feature_type, gesture_set):
         results = DataOptimizer.obtain_optimal_classifier(
@@ -252,6 +311,7 @@ class TrainingMenu:
 
         return training_summary
 
+    ''' MIGHT REMOVE THIS FUNCTIONALITY '''
     def train_manual(self, csv_file, subject_name, feature_type, gesture_set):
 
         results = DataOptimizer.obtain_optimal_classifier(
@@ -375,7 +435,6 @@ class TrainingMenu:
                 # Create the file
                 self.file_creation(group=file_item, file_name=file_name)
         pass
-
 
     def combine_subjects_combine_gestures(self):
         # Get parameters
