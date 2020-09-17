@@ -17,6 +17,7 @@ trd_dir = dat_dir + "trained_data\\"
 sca_dir = dat_dir + "standard_scales\\"
 com_dir = dat_dir + "combined_data\\"
 uns_dir = dat_dir + "unseen_data\\"
+cun_dir = uns_dir + "combined_unseen_data\\"
 
 sum_dir = out_dir + "summary\\"
 tra_dir = sum_dir + "training\\"
@@ -128,14 +129,9 @@ def append_to_report(file_name, line):
 
 # TRAINING SUMMARY FUNCTIONS
 def create_training_report(subject_name, feature_set, gesture_set, classifier_type):
-    today = date.today()
-    now = datetime.now()
-
-    date_today = today.strftime("%d-%m-%Y")
-    time_now = now.strftime("%H-%M")
 
     file_name = upper(classifier_type) + "_TRAINING_REPORT "
-    file_name = tra_dir + file_name + "(" + subject_name + ") " + gesture_set + "--" + feature_set + "[" + str(time_now) + "(" + str(date_today) + ")].txt"
+    file_name = tra_dir + file_name + "(" + subject_name + ") " + gesture_set + "--" + feature_set + ".txt"
 
     writer = open(file_name, 'w')
     writer.close()
@@ -145,14 +141,9 @@ def create_training_report(subject_name, feature_set, gesture_set, classifier_ty
 
 # CLASSIFICATION SUMMARY FUNCTIONS
 def create_classification_report(subject_name, classifier_type=None, feature_set=None, gesture_set=None):
-    today = date.today()
-    now = datetime.now()
-
-    date_today = today.strftime("%d-%m-%Y")
-    time_now = now.strftime("%H-%M")
 
     file_name = upper(classifier_type) + "_CLASSIFICATION_REPORT"
-    file_name = cla_dir + file_name + "(" + subject_name + ") " + gesture_set + "--" + feature_set + "[" + str(time_now) + "(" + str(date_today) + ")].txt"
+    file_name = cla_dir + file_name + "(" + subject_name + ") " + gesture_set + "--" + feature_set + ".txt"
 
     writer = open(file_name, 'w')
     writer.close()
@@ -264,6 +255,21 @@ def get_data_files(directory=dat_dir, combined=False):
 
     return data_file_names
 
+def get_unseen_data_files(directory=uns_dir, combined=False):
+    extension = '.csv'
+    unseen_data_files = []
+    if combined is True:
+        for file_name in os.listdir(com_dir):
+            file_name = uns_dir + file_name
+            if file_name.endswith(extension):
+                unseen_data_files.append(file_name)
+    else:
+        for file_name in os.listdir(directory):
+            file_name = directory + file_name
+            if file_name.endswith(extension):
+                unseen_data_files.append(file_name)
+
+    return unseen_data_files
 
 def get_pickle_files(directory=trd_dir):
     extension = '.pickle'

@@ -24,97 +24,17 @@ class TrainingMenu:
             print("-------------")
             print("DATA TRAINING")
             print("-------------")
-            print("(1) - Support Vector Machine")
-            print("(2) - Multilayer Perceptron (Neural Network)")
-            print("(3) - Decision Trees")
-            print("(4) - Create New Sets")
+            print("(1) - Train")
+            print("(2) - Create New Sets")
             print("(0) - Back")
 
             choice = raw_input("Your Choice: ")
+
             if choice == '1':
-                self.classifier_type = 'svm'
-                self.prompt_training_mode()
+                self.prompt_learning_algorithm()
                 pass
-            elif choice == '2':
-                self.classifier_type = 'nn'
-                self.prompt_training_mode()
-                pass
-            elif choice == '3':
-                self.classifier_type = 'dt'
-                self.prompt_training_mode()
-                pass
-            elif choice == '4':
-                self.all_training()
-                pass
-            elif choice == '5':
+            if choice == '2':
                 self.prompt_create_sets()
-                pass
-            elif choice == '0':
-                done = True
-                pass
-            else:
-                print("Please try again.")
-                pass
-
-    def prompt_create_sets(self):
-        # Shows menu for creating new data sets
-        done = False
-        while done is False:
-            print("----------------")
-            print("DATA COMBINATION")
-            print("----------------")
-            print("(1) - Combine Gesture Set with Individual Subject")
-            print("(2) - Combine Subjects with Individual Gesture Set")
-            print("(3) - Combine ALL Gesture Set with All Subjects")
-            print("(0) - Back")
-
-            choice = raw_input("Your Choice: ")
-            if choice == '1':
-                self.combine_gestures_separate_subjects()
-                pass
-            elif choice == '2':
-                self.combine_subjects_separate_gestures()
-                pass
-            elif choice == '3':
-                self.combine_subjects_combine_gestures()
-                pass
-            elif choice == '0':
-                done = True
-                pass
-            else:
-                print("Please try again.")
-
-        pass
-
-    def prompt_training_mode(self):
-        done = False
-        while done is False:
-            print("-------------")
-            print("TRAINING MODE")
-            print("-------------")
-            print("(1) - Single Training")
-            print("(2) - Multi Training")
-            print("(3) - Single Combined Training")
-            print("(4) - Multi Combined Training")
-            print("(0) - Back")
-
-            choice = raw_input("Your Choice: ")
-
-            if choice == '1':
-                self.single_training()
-                done = True
-                pass
-            elif choice == '2':
-                self.multi_training()
-                done = True
-                pass
-            elif choice == '3':
-                self.single_training(combined=True)
-                done = True
-                pass
-            elif choice == '4':
-                self.multi_training(combined=True)
-                done = True
                 pass
             elif choice == '0':
                 done = True
@@ -237,62 +157,66 @@ class TrainingMenu:
                                                feature_set=feature_set, gesture_set=gesture_set)
 
     def all_training(self):
-        file_name = None
+        classifier_types = ['svm', 'nn', 'dt']
         # Obtain all data files
         sep_data_files = io.get_data_files(combined=False)
         com_data_files = io.get_data_files(combined=True)
         # Join the two lists
         data_files = sep_data_files + com_data_files
 
-        for data_file in data_files:
-            subject_name = data_file.rsplit("(", 1)[1].rsplit(")")[0]
-            gesture_set = strip(data_file.rsplit(")")[1].rsplit(".")[0].rsplit("--")[0])
-            feature_set = strip(data_file.rsplit(")")[1].rsplit(".")[0].rsplit("--")[1])
+        for classifier_type in classifier_types:
+            self.classifier_type = classifier_type
+            for data_file in data_files:
+                # Reset file name since each data file should have its own report
+                file_name = None
+                subject_name = data_file.rsplit("(", 1)[1].rsplit(")")[0]
+                gesture_set = strip(data_file.rsplit(")")[1].rsplit(".")[0].rsplit("--")[0])
+                feature_set = strip(data_file.rsplit(")")[1].rsplit(".")[0].rsplit("--")[1])
 
-            # SVM Multi Training
-            if self.classifier_type == 'svm':
-                kernel_list = ['linear', 'poly', 'rbf', 'sigmoid']
+                # SVM Multi Training
+                if classifier_type == 'svm':
+                    kernel_list = ['linear', 'poly', 'rbf', 'sigmoid']
 
-                for kernel in kernel_list:
-                    # Reset params before populating
-                    self.params = []
-                    self.params.append(kernel)
+                    for kernel in kernel_list:
+                        # Reset params before populating
+                        self.params = []
+                        self.params.append(kernel)
 
-                    training_summary = self.train_auto(csv_file=data_file, subject_name=subject_name,
-                                                       feature_type=feature_set, gesture_set=gesture_set)
-                    file_name = io.save_report(file_name=file_name, subject_name=subject_name, report_header='training',
-                                               line=training_summary, classifier_type=self.classifier_type,
-                                               feature_set=feature_set, gesture_set=gesture_set)
-                pass
-            # NN Multi Training
-            elif self.classifier_type == 'nn':
-                activations = ['relu', 'logistic']
+                        training_summary = self.train_auto(csv_file=data_file, subject_name=subject_name,
+                                                           feature_type=feature_set, gesture_set=gesture_set)
+                        file_name = io.save_report(file_name=file_name, subject_name=subject_name, report_header='training',
+                                                   line=training_summary, classifier_type=self.classifier_type,
+                                                   feature_set=feature_set, gesture_set=gesture_set)
+                    pass
+                # NN Multi Training
+                elif classifier_type == 'nn':
+                    activations = ['relu', 'logistic']
 
-                for activation in activations:
-                    # Reset params before populating
-                    self.params = []
-                    self.params.append(activation)
+                    for activation in activations:
+                        # Reset params before populating
+                        self.params = []
+                        self.params.append(activation)
 
-                    training_summary = self.train_auto(csv_file=data_file, subject_name=subject_name,
-                                                       feature_type=feature_set, gesture_set=gesture_set)
-                    file_name = io.save_report(file_name=file_name, subject_name=subject_name, report_header='training',
-                                               line=training_summary, classifier_type=self.classifier_type,
-                                               feature_set=feature_set, gesture_set=gesture_set)
-                pass
-            # Decision Tree Multi Training
-            elif self.classifier_type == 'dt':
-                criterions = ['gini', 'entropy']
+                        training_summary = self.train_auto(csv_file=data_file, subject_name=subject_name,
+                                                           feature_type=feature_set, gesture_set=gesture_set)
+                        file_name = io.save_report(file_name=file_name, subject_name=subject_name, report_header='training',
+                                                   line=training_summary, classifier_type=self.classifier_type,
+                                                   feature_set=feature_set, gesture_set=gesture_set)
+                    pass
+                # Decision Tree Multi Training
+                elif classifier_type == 'dt':
+                    criterions = ['gini', 'entropy']
 
-                for criterion in criterions:
-                    # Reset params before populating
-                    self.params = []
-                    self.params.append(criterion)
+                    for criterion in criterions:
+                        # Reset params before populating
+                        self.params = []
+                        self.params.append(criterion)
 
-                    training_summary = self.train_auto(csv_file=data_file, subject_name=subject_name,
-                                                       feature_type=feature_set, gesture_set=gesture_set)
-                    file_name = io.save_report(file_name=file_name, subject_name=subject_name, report_header='training',
-                                               line=training_summary, classifier_type=self.classifier_type,
-                                               feature_set=feature_set, gesture_set=gesture_set)
+                        training_summary = self.train_auto(csv_file=data_file, subject_name=subject_name,
+                                                           feature_type=feature_set, gesture_set=gesture_set)
+                        file_name = io.save_report(file_name=file_name, subject_name=subject_name, report_header='training',
+                                                   line=training_summary, classifier_type=self.classifier_type,
+                                                   feature_set=feature_set, gesture_set=gesture_set)
 
     def train_auto(self, csv_file, subject_name, feature_type, gesture_set):
         results = LeapDataOptimizer.obtain_optimal_classifier(
@@ -342,22 +266,24 @@ class TrainingMenu:
 
     def combine_gestures_separate_subjects(self):
         # Get parameters
-        data_files, feature_set_list, _, subject_name_list = self.get_params()
+        data_files, unseen_data_files, feature_set_list, _, subject_name_list = self.get_params()
 
         # Grouping Stage
         group_by_subject = []
+        unseen_group_by_subject = []
         i = 0
 
         # Group by Subject Name
         for subject_name in subject_name_list:
             subject_group = []
+            unseen_subject_group = []
             j = 0
 
             # Group by Feature Set
             for feature_set in feature_set_list:
-                subject_feature_group = []
 
-                # Iterate through data files to find matching
+                # Acquired Data
+                subject_feature_group = []
                 for data_file in data_files:
                     feature_set_check = data_file.split("--")[1].split(".")[0]
                     subject_name_check = data_file.split("(")[1].split(")")[0]
@@ -368,13 +294,32 @@ class TrainingMenu:
 
                 if len(subject_feature_group) > 0:
                     subject_group.append(subject_feature_group)
+
+                # Unseen Data
+                unseen_subject_feature_group = []
+                for unseen_data_file in unseen_data_files:
+                    feature_set_check = unseen_data_file.split("--")[1].split(".")[0]
+                    subject_name_check = unseen_data_file.split("(")[1].split(")")[0]
+
+                    # Only append to group if matches subject and feature
+                    if feature_set == feature_set_check and subject_name == subject_name_check:
+                        unseen_subject_feature_group.append(unseen_data_file)
+
+                if len(unseen_subject_feature_group) > 0:
+                    unseen_subject_group.append(unseen_subject_feature_group)
+
                 j += 1
 
             # Only Append to group if not an empty group
             if len(subject_group) > 0:
                 group_by_subject.append(subject_group)
+
+            # Unseen Data
+            if len(unseen_subject_group) > 0:
+                unseen_group_by_subject.append(unseen_subject_group)
             i += 1
 
+        # Creating data file for combined acquired data
         for group in group_by_subject:
             for file_item in group:
                 # All items in this group should have same subject and same content
@@ -386,26 +331,40 @@ class TrainingMenu:
 
                 # Create the file
                 self.file_creation(group=file_item, file_name=file_name)
+
+        # Creating data file for combined unseen data
+        for group in unseen_group_by_subject:
+            for file_item in group:
+                # All items in this group should have same subject and same content
+                subject = file_item[0].split("(")[1].split(")")[0]
+                feature_set = file_item[0].split("--")[1].split(".")[0]
+
+                # Construct file name
+                file_name = io.cun_dir + "(" + subject + ") " + "COMBINED GESTURES--" + feature_set + ".csv"
+
+                # Create the file
+                self.file_creation(group=file_item, file_name=file_name)
         pass
 
     def combine_subjects_separate_gestures(self):
         # Get parameters
-        data_files, feature_set_list, gesture_set_list, _ = self.get_params()
+        data_files, unseen_data_files, feature_set_list, gesture_set_list, _ = self.get_params()
 
         # Grouping Stage
         group_by_gesture = []
+        unseen_group_by_gesture = []
         i = 0
 
         # Group by Gesture SetName
         for gesture_set in gesture_set_list:
             gesture_group = []
+            unseen_gesture_group = []
             j = 0
 
             # Group by Feature Set
             for feature_set in feature_set_list:
+                # Acquired Data
                 gesture_feature_group = []
-
-                # Iterate through data files to find matching
                 for data_file in data_files:
                     feature_set_check = data_file.split("--")[1].split(".")[0]
                     gesture_set_check = strip(data_file.split("--")[0].split(")")[1])
@@ -416,13 +375,31 @@ class TrainingMenu:
 
                 if len(gesture_feature_group) > 0:
                     gesture_group.append(gesture_feature_group)
+
+                # Unseen Data
+                unseen_gesture_feature_group = []
+                for unseen_data_file in unseen_data_files:
+                    feature_set_check = unseen_data_file.split("--")[1].split(".")[0]
+
+                    # Only append to group if matches subject and feature
+                    if feature_set == feature_set_check:
+                        unseen_gesture_feature_group.append(unseen_data_file)
+
+                if len(unseen_gesture_feature_group) > 0:
+                    unseen_gesture_group.append(gesture_feature_group)
                 j += 1
 
-            # Only Append to group if not an empty group
+            # Acquired Data
             if len(gesture_group) > 0:
                 group_by_gesture.append(gesture_group)
+
+            # Unseen Data
+            if len(unseen_gesture_group) > 0:
+                unseen_group_by_gesture.append(unseen_gesture_group)
+
             i += 1
 
+        # Creating data file for combined acquired data
         for group in group_by_gesture:
             for file_item in group:
                 # All items in this group should have same subject and same content
@@ -434,27 +411,54 @@ class TrainingMenu:
 
                 # Create the file
                 self.file_creation(group=file_item, file_name=file_name)
+
+        # Creating data file for combined unseen data
+        for group in unseen_group_by_gesture:
+            for file_item in group:
+                # All items in this group should have same subject and same content
+                gesture_set = strip(file_item[0].split("--")[0].split(")")[1])
+                feature_set = file_item[0].split("--")[1].split(".")[0]
+
+                # Construct file name
+                file_name = io.cun_dir + "(COMBINED SUBJECTS) " + gesture_set + "--" + feature_set + ".csv"
+
+                # Create the file
+                self.file_creation(group=file_item, file_name=file_name)
+
+
         pass
 
     def combine_subjects_combine_gestures(self):
         # Get parameters
-        data_files, feature_set_list, _, _ = self.get_params()
+        data_files, unseen_data_files, feature_set_list, _, _ = self.get_params()
 
         # Grouping Stage
-        full_combined_group = []
+        combined_acquired_data = []
+        combined_unseen_data = []
         i = 0
+
         # Group by Feature Set
         for feature_set in feature_set_list:
-            # Iterate through data files to find matching
+            # Acquired Data
             for data_file in data_files:
                 feature_set_check = data_file.split("--")[1].split(".")[0]
 
                 # Only append to group if matches subject and feature
                 if feature_set == feature_set_check:
-                    full_combined_group.append(data_file)
+                    combined_acquired_data.append(data_file)
+
+            # Unseen Data
+            for unseen_data_file in unseen_data_files:
+                feature_set_check = unseen_data_file.split("--")[1].split(".")[0]
+
+                # Only append to group if matches subject and feature
+                if feature_set == feature_set_check:
+                    combined_unseen_data.append(unseen_data_file)
+
             i += 1
 
-        for file_item in full_combined_group:
+        # Creating data file for combined acquired data
+        for file_item in combined_acquired_data:
             # All items in this group should have same subject and same content
             feature_set = file_item.split("--")[1].split(".")[0]
 
@@ -464,10 +468,25 @@ class TrainingMenu:
             # Create the file
             self.file_creation(single_item=file_item, file_name=file_name, single=True)
 
+        # Creating data file for combined unseen data
+        for file_item in combined_unseen_data:
+            # All items in this group should have same subject and same content
+            feature_set = file_item.split("--")[1].split(".")[0]
+
+            # Construct file name
+            file_name = io.cun_dir + "(COMBINED SUBJECTS) " + "COMBINED GESTURES--" + feature_set + ".csv"
+
+            # Create the file
+            self.file_creation(single_item=file_item, file_name=file_name, single=True)
+
+
         pass
 
+    ''' FUNCTIONS '''
     def get_params(self):
         data_files = io.get_data_files()
+        unseen_data_files = io.get_unseen_data_files()
+
         feature_set_list = [
             'finger-angle-and-palm-distance',
             'finger-angle-using-bones',
@@ -480,7 +499,7 @@ class TrainingMenu:
         ]
         subject_name_list = io.read_col("subjects.txt")
 
-        return data_files, feature_set_list, gesture_set_list, subject_name_list
+        return data_files, unseen_data_files, feature_set_list, gesture_set_list, subject_name_list
 
     def display_groups(self, full_group):
         print("** FINAL GROUPS ** ")
@@ -513,3 +532,105 @@ class TrainingMenu:
                     io.create_data_file(file_name=file_name, labels=labels)
                 else:
                     io.append_to_file(file_name=file_name, lines=strip(str(content)))
+
+    ''' PROMPTS FOR USER '''
+    def prompt_learning_algorithm(self):
+        done = False
+
+        while done is False:
+            print("-------------")
+            print("DATA TRAINING")
+            print("-------------")
+            print("(1) - Support Vector Machine")
+            print("(2) - Multilayer Perceptron (Neural Network)")
+            print("(3) - Decision Trees")
+            print("(4) - Full Training\n")
+            print("(0) - Back")
+
+            choice = raw_input("Your Choice: ")
+
+            if choice == '1':
+                self.classifier_type = 'svm'
+                self.prompt_training_mode()
+                pass
+            elif choice == '2':
+                self.classifier_type = 'nn'
+                self.prompt_training_mode()
+                pass
+            elif choice == '3':
+                self.classifier_type = 'dt'
+                self.prompt_training_mode()
+                pass
+            elif choice == '4':
+                self.all_training()
+                pass
+            elif choice == '0':
+                done = True
+                pass
+
+    def prompt_create_sets(self):
+        # Shows menu for creating new data sets
+        done = False
+        while done is False:
+            print("----------------")
+            print("DATA COMBINATION")
+            print("----------------")
+            print("(1) - Combine Gesture Set with Individual Subject")
+            print("(2) - Combine Subjects with Individual Gesture Set")
+            print("(3) - Combine ALL Gesture Set with All Subjects")
+            print("(0) - Back")
+
+            choice = raw_input("Your Choice: ")
+            if choice == '1':
+                self.combine_gestures_separate_subjects()
+                pass
+            elif choice == '2':
+                self.combine_subjects_separate_gestures()
+                pass
+            elif choice == '3':
+                self.combine_subjects_combine_gestures()
+                pass
+            elif choice == '0':
+                done = True
+                pass
+            else:
+                print("Please try again.")
+
+        pass
+
+    def prompt_training_mode(self):
+        done = False
+        while done is False:
+            print("-------------")
+            print("TRAINING MODE")
+            print("-------------")
+            print("(1) - Single Training")
+            print("(2) - Multi Training")
+            print("(3) - Single Combined Training")
+            print("(4) - Multi Combined Training")
+            print("(0) - Back")
+
+            choice = raw_input("Your Choice: ")
+
+            if choice == '1':
+                self.single_training()
+                done = True
+                pass
+            elif choice == '2':
+                self.multi_training()
+                done = True
+                pass
+            elif choice == '3':
+                self.single_training(combined=True)
+                done = True
+                pass
+            elif choice == '4':
+                self.multi_training(combined=True)
+                done = True
+                pass
+            elif choice == '0':
+                done = True
+                pass
+            else:
+                print("Please try again.")
+                pass
