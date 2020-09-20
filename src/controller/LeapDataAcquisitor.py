@@ -322,18 +322,27 @@ class LeapDataAcquisitor:
         hand_set = []
         i = 0
         while i < iterations:
-            hand_set.append(self.test_get_hand_data())
+            print i
+
+            hand = self.test_get_hand_data()
+            if hand is not None:
+                print hand
+                hand_set.append(self.test_get_hand_data())
+                i += 1
 
         return hand_set
 
     def test_get_hand_data(self):
         done = False
         while done is False:
-            if self.unsupervised_data_validation() is True:
-                hand = self.leap_controller.frame().hands[0]
-                if hand is not None:
-                    done = True
-                    time.sleep(0.1)
+            if self.leap_controller.is_connected:
+                visible_hands = self.leap_controller.frame().hands
+                if len(visible_hands) > 0:
+                    hand = visible_hands[0]
+                    if hand is not None:
+                        print("TEST : " + str(hand))
+                        time.sleep(0.1)
+                        return hand
         return None
 
     def get_hand_data(self):
