@@ -2,7 +2,6 @@ from view.menu import AcquisitionMenu, RecognitionMenu
 from view.menu.ClassificationMenu import ClassificationMenu
 from view.menu.TrainingMenu import TrainingMenu
 
-
 def show(controller):
     # Shows menu for main menu
     done = False

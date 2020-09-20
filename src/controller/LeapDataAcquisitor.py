@@ -1,12 +1,12 @@
 import math
 import time
-from string import strip
 import numpy as np
 import pandas as pd
 
 from pip._vendor.distlib.compat import raw_input
 
 from Leap import Bone, Finger
+
 from leapio import LeapIO
 from model.LeapData import LeapData
 
@@ -316,6 +316,25 @@ class LeapDataAcquisitor:
             time.sleep(0.001)
 
         return data_list
+
+    ''' TEST '''
+    def test_get_hand_data_set(self, iterations=10):
+        hand_set = []
+        i = 0
+        while i < iterations:
+            hand_set.append(self.test_get_hand_data())
+
+        return hand_set
+
+    def test_get_hand_data(self):
+        done = False
+        while done is False:
+            if self.unsupervised_data_validation() is True:
+                hand = self.leap_controller.frame().hands[0]
+                if hand is not None:
+                    done = True
+                    time.sleep(0.1)
+        return None
 
     def get_hand_data(self):
         done = False

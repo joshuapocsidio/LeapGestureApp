@@ -17,6 +17,7 @@ def show(controller):
         print("(1) - Manual Acquisition")
         print("(2) - Systematic Acquisition : Training Set")
         print("(3) - Systematic Acquisition : Testing Set")
+        print("(4) - Test Obtain ONLY HAND DATA")
         print("(0) - Back")
 
         choice = raw_input("Your Choice: ")
@@ -29,6 +30,9 @@ def show(controller):
             pass
         elif choice == '3':
             do_acquisition(controller=controller, intervals=25, checkpoints=5)
+            pass
+        elif choice == '4':
+            test_manual_acquisition(controller=controller)
             pass
         elif choice == '0':
             done = True
@@ -52,10 +56,6 @@ def do_acquisition(controller, intervals, checkpoints):
     acquisitor = LeapDataAcquisitor(leap_controller=controller, subject_name=subject_name, supervised=False)
     gesture_titles = ['Counting Gestures', 'Status Gestures', 'American Sign Language Gestures']
     hand_config = ['LEFT HAND', 'RIGHT HAND']
-    lighting_config = ['WELL LIT ENVIRONMENT', 'DIMLY LIT ENVIRONMENT']
-
-    # Change this between sessions
-    cur_lighting = lighting_config[0]
 
     gesture_src, gesture_title_index = prompt_gesture_src()
 
@@ -167,6 +167,34 @@ def manual_acquisition(controller):
             print("Please try again")
             pass
 
+def test_manual_acquisition(controller):
+    done = False
+    acquisitor = None
+    while done is False:
+        print("----------------")
+        print("DATA ACQUISITION")
+        print("----------------")
+        print("(1) - Feature Data Set : Finger to Palm Distance")
+        print("(2) - Feature Data Set : Finger to Palm Angle")
+        print("(3) - Feature Data Set : Finger to Palm Distance and Angle")
+        print("(4) - Feature Data Set : Finger to Finger Distance")
+        print("(9) - Feature Data Set : ALL")
+        print("(0) - Back")
+
+        choice = raw_input("Your Choice: ")
+
+        if choice != '0' and choice is not None and choice != '':
+            subject_name = prompt_subject_name()
+            # Initialise the Acquisitor
+            acquisitor = LeapDataAcquisitor(leap_controller=controller, subject_name=subject_name)
+            acquisitor.test_get_hand_data_set(iterations=10)
+
+        elif choice == '0':
+            done = True
+            pass
+        else:
+            print("Please try again")
+            pass
 
 def prompt_subject_name():
     done = False
