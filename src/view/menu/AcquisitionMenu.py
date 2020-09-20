@@ -187,7 +187,10 @@ def test_manual_acquisition(controller):
             subject_name = prompt_subject_name()
             # Initialise the Acquisitor
             acquisitor = LeapDataAcquisitor(leap_controller=controller, subject_name=subject_name)
-            acquisitor.test_get_hand_data_set(iterations=10)
+            hand_set = acquisitor.test_get_hand_data_set(iterations=10)
+
+            for hand in hand_set:
+                print(hand.palm_position)
 
         elif choice == '0':
             done = True
