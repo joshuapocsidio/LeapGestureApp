@@ -5,6 +5,7 @@ import leapio.LeapIO as io
 import leapio.Printer as printer
 from string import strip
 import numpy as np
+import Leap
 import pandas as pd
 
 
@@ -89,11 +90,20 @@ def show(leap_controller):
             while done is True:
                 frame = leap_controller.frame()
                 hand = frame.hands[0]
-
-                x_d = round(hand.palm_normal.x, 5)
-                y_d = round(hand.palm_normal.y, 5)
-                z_d = round(hand.palm_normal.z, 5)
-                print("\r" + str(x_d) + ", " + str(y_d) + ", " + str(z_d)),
+                up = Leap.Vector.up
+                round(up.x, 1)
+                round(up.y, 1)
+                round(up.z, 1)
+                print(up)
+                x = round(hand.palm_normal.x, 1)
+                y = round(hand.palm_normal.y, 1)
+                z = round(hand.palm_normal.z, 1)
+                print ("(" + str(x) + "," + str(y) + "," + str(z) + ")")
+                time.sleep(0.5)
+                # x_d = round(hand.palm_normal.x, 5)
+                # y_d = round(hand.palm_normal.y, 5)
+                # z_d = round(hand.palm_normal.z, 5)
+                # print("\r" + str(x_d) + ", " + str(y_d) + ", " + str(z_d)),
             pass
         elif choice == '9':
             pass

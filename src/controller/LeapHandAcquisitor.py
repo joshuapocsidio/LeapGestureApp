@@ -1,5 +1,5 @@
 import leapio.LeapIO as io
-
+from model.LeapHand import LeapHand
 class LeapHandAcquisitor:
     def __init__(self, leap_controller, supervised=False, verbose=False):
         self.leap_controller = leap_controller
@@ -28,10 +28,11 @@ class LeapHandAcquisitor:
         i = 0
         while i < iterations:
             # Acquire hand data
-            hand = self.test_get_hand_data()
+            hand = self.acquire_single_hand_data()
+            print i
             if hand is not None:
-                print hand
-                hand_set.append(self.test_get_hand_data())
+                hand_object = LeapHand(hand=hand)
+                hand_set.append(hand_object)
                 i += 1  # If counter is at interval, prompt user
 
             if i % intervals == 0:
@@ -41,6 +42,7 @@ class LeapHandAcquisitor:
                     raw_input("\nSystem       :       Press any key to get data: "),
 
 
+        print hand_set
         # Save pickle of hand data set
         io.save_hand_pickle(data=hand_set, subject=subject)
 

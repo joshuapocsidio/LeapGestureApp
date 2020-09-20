@@ -191,10 +191,10 @@ def test_manual_acquisition(controller):
             # hand_set = acquisitor.test_get_hand_data_set(iterations=10)
             #
 
-
             acquisitor = LeapHandAcquisitor(leap_controller=controller)
-            hand_set = acquisitor.acquire_multiple_hand_data(subject=subject_name)
+            hand_set = acquisitor.acquire_multiple_hand_data(subject=subject_name, iterations=10, intervals=100)
 
+            print("NOW PRINTING")
             for hand in hand_set:
                 print(hand.palm_position)
 
