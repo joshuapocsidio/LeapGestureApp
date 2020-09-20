@@ -31,6 +31,7 @@ class LeapDataAcquisitor:
         self.gesture_set = gesture_set
         self.supervised = supervised
 
+
     def acquire_data_from_csv(self, csv_file):
 
         # Read csv file

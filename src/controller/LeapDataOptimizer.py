@@ -211,7 +211,8 @@ def analyze_classifiers(trainer_list, time_list, train_accuracy_list, test_accur
     summary += "* * * * * * * * * *\n"
     # Construct summary report
     summary += "CLASSIFIER          : " + optimal_classifier.classifier_name + '\n'
-    summary += "FEATURE TYPE        : " + optimal_classifier.feature_type + "\n\n"
+    summary += "FEATURE TYPE        : " + optimal_classifier.feature_type + "\n"
+    summary += "GESTURE SET         : " + optimal_classifier.gesture_set + "\n\n"
 
     summary += "TIME(TOTAL)         : " + str(total_time) + " seconds \n"
     summary += "TIME(WORST)         : " + str(worst_time) + " seconds \n"

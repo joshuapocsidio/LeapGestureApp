@@ -21,19 +21,20 @@ class ClassificationMenu:
             print("-------------------")
             print("DATA CLASSIFICATION")
             print("-------------------")
-            print("(1) - Real Time Classification Test")
+            print("(1) - Repeatability Classification Test")
             print("(2) - Unseen Data Classification Test")
             print("(0) - Back")
 
             choice = raw_input("Your Choice: ")
 
             if choice == '1':
-                self.real_time_classification_test()
+                self.repeatability_classification_test()
                 pass
             elif choice == '2':
                 self.unseen_data_classification_test()
                 pass
             elif choice == '0':
+                done = True
                 pass
 
     def unseen_data_classification_test(self):
@@ -42,30 +43,31 @@ class ClassificationMenu:
             print("--------------------------")
             print("UNSEEN DATA CLASSIFICATION")
             print("--------------------------")
-            print("(1) - Single Personalized Test")
-            print("(2) - Single Non-Personalized Test")
-            print("(3) - Multi Personalized Test")
-            print("(4) - Multi Non-Personalized Test")
+            print("(1) - Single Subject Personalized Test")
+            print("(2) - Single Subject Non-Personalized Test")
+            print("(3) - Multi Subject Personalized Test")
+            print("(4) - Multi Subject Non-Personalized Test")
             print("(5) - Full Systematic Test")
             print("(0) - Back")
 
             choice = raw_input("Your Choice: ")
 
             file_name = None
-            unseen_data_list, matching_pickle_list, _, _, subject_name_list = self.get_params()
+            unseen_data_list, trained_pickle_list, _, _, subject_name_list = self.get_params()
             # PERSONALIZED TEST - one trained subject for own unseen data
             if choice == '1':
                 choice_subject_name = self.prompt_subject_name()
+                matching_pickle_list = []
 
                 # Obtain all trained data for this test subject
-                for matching_pickle in matching_pickle_list:
+                for trained_pickle in trained_pickle_list:
                     # Obtain the subject of trained data for each matching pickle file
-                    trained_subject = matching_pickle.rsplit("(", 1)[1].rsplit(")")[0]
+                    trained_subject = trained_pickle.rsplit("(", 1)[1].rsplit(")")[0]
 
-                    # Want personalized data -- test with own unseen data
+                    # Want all pickle files for this subject
                     if lower(trained_subject) == lower(choice_subject_name):
-                        print(matching_pickle)
-                        matching_pickle_list.append(matching_pickle)
+                        print(trained_pickle)
+                        matching_pickle_list.append(trained_pickle)
                         pass
 
                 # Get Own Unseen Data
@@ -90,7 +92,7 @@ class ClassificationMenu:
                         if unseen_feature_set == feature_set and \
                                 unseen_subject_name == choice_subject_name and \
                                 unseen_gesture_set == gesture_set:
-                            print("UNSEEN : " + unseen_data)
+
                             # Do classification from csv
                             file_name = self.classification_controller.do_classification_from_csv(
                                 pickle_file=matching_pickle,
@@ -107,15 +109,16 @@ class ClassificationMenu:
             elif choice == '2':
                 choice_subject_name = self.prompt_subject_name()
 
+                matching_pickle_list = []
                 # Obtain all trained data for this test subject
-                for matching_pickle in matching_pickle_list:
+                for trained_pickle in trained_pickle_list:
                     # Obtain the subject of trained data for each matching pickle file
-                    trained_subject = matching_pickle.rsplit("(", 1)[1].rsplit(")")[0]
+                    trained_subject = trained_pickle.rsplit("(", 1)[1].rsplit(")")[0]
 
-                    # Want personalized data -- test with own unseen data
-                    if lower(trained_subject) != lower(choice_subject_name):
-                        print(matching_pickle)
-                        matching_pickle_list.append(matching_pickle)
+                    # Want all pickle files for this subject
+                    if lower(trained_subject) == lower(choice_subject_name):
+                        print(trained_pickle)
+                        matching_pickle_list.append(trained_pickle)
                         pass
 
                 # Get Others' Unseen Data
@@ -153,16 +156,17 @@ class ClassificationMenu:
                             )
 
             elif choice == '3':
+                matching_pickle_list = []
                 for subject_name in subject_name_list:
                     # Obtain all trained data for this test subject
-                    for matching_pickle in matching_pickle_list:
+                    for trained_pickle in trained_pickle_list:
                         # Obtain the subject of trained data for each matching pickle file
-                        trained_subject = matching_pickle.rsplit("(", 1)[1].rsplit(")")[0]
+                        trained_subject = trained_pickle.rsplit("(", 1)[1].rsplit(")")[0]
 
-                        # Want personalized data -- test with own unseen data
+                        # Want all pickle files for this subject
                         if lower(trained_subject) == lower(subject_name):
-                            print(matching_pickle)
-                            matching_pickle_list.append(matching_pickle)
+                            print(trained_pickle)
+                            matching_pickle_list.append(trained_pickle)
                             pass
 
                     # Get Own Unseen Data
@@ -200,18 +204,18 @@ class ClassificationMenu:
                                 )
 
             elif choice == '4':
+                matching_pickle_list = []
                 for subject_name in subject_name_list:
                     # Obtain all trained data for this test subject
-                    for matching_pickle in matching_pickle_list:
+                    for trained_pickle in trained_pickle_list:
                         # Obtain the subject of trained data for each matching pickle file
-                        trained_subject = matching_pickle.rsplit("(", 1)[1].rsplit(")")[0]
+                        trained_subject = trained_pickle.rsplit("(", 1)[1].rsplit(")")[0]
 
-                        # Want personalized data -- test with own unseen data
-                        if lower(trained_subject) != lower(subject_name):
-                            print(matching_pickle)
-                            matching_pickle_list.append(matching_pickle)
+                        # Want all pickle files for this subject
+                        if lower(trained_subject) == lower(subject_name):
+                            print(trained_pickle)
+                            matching_pickle_list.append(trained_pickle)
                             pass
-
                     # Get Own Unseen Data
                     for unseen_data in unseen_data_list:
                         # Obtain feature set
@@ -245,13 +249,64 @@ class ClassificationMenu:
                                     unseen_data=unseen_data,
                                     file_name=file_name
                                 )
+            elif choice == '5':
+                matching_pickle_list = []
+                total = len(subject_name_list) * ((len(subject_name_list) * 8) + (len(subject_name_list) * 4) + 12)
+                num = 0
+                for subject_name in subject_name_list:
+                    # Obtain all trained data for this test subject
+                    for trained_pickle in trained_pickle_list:
+                        # Obtain the subject of trained data for each matching pickle file
+                        trained_subject = trained_pickle.rsplit("(", 1)[1].rsplit(")")[0]
+
+                        # Want all pickle files for this subject
+                        if lower(trained_subject) == lower(subject_name):
+                            matching_pickle_list.append(trained_pickle)
+                            pass
+                    # Get Own Unseen Data
+                    for unseen_data in unseen_data_list:
+                        # Obtain feature set
+                        unseen_feature_set = unseen_data.split("--")[1].split(".csv")[0]
+                        # Obtain name since personalized test - subject name matters
+                        unseen_subject_name = unseen_data.split("(")[1].split(")")[0]
+                        # Obtain gesture set since only want to compare matching gestures
+                        unseen_gesture_set = strip(unseen_data.split("--")[0].split(")")[1])
+
+                        # Check for all matching trained data from chosen name
+                        for matching_pickle in matching_pickle_list:
+                            # Get File Path without folders
+                            file_path = matching_pickle.split("\\")[-1]
+                            # Get parameters
+                            classifier_type = file_path.split(" ")[0]
+                            gesture_set = strip(file_path.split("--")[0].split(")")[1])
+                            feature_set = file_path.split("--")[1].split(".pickle")[0].split("_")[0]
+                            subject_name = file_path.split("(")[1].split(")")[0]
+
+                            # Only do classification if same type of feature set ---> Otherwise will not work at all
+                            if unseen_feature_set == feature_set and \
+                                    unseen_gesture_set == gesture_set:
+                                params = matching_pickle.split("_")[-1].split(".")[0]
+                                print("\rProgress (" + str(num) + "\\" + str(total) + ")" + " ----> (" + subject_name + ") " + gesture_set + "--" + feature_set + "_" + params + " acquired"),
+
+                                # Do classification from csv
+                                self.classification_controller.do_classification_from_csv(
+                                    pickle_file=matching_pickle,
+                                    test_subject=subject_name,
+                                    comparison_subject=unseen_subject_name,
+                                    classifier_type=classifier_type,
+                                    gesture_set=gesture_set,
+                                    feature_set=feature_set,
+                                    unseen_data=unseen_data,
+                                    file_name=file_name
+                                )
+                                num += 1
 
             elif choice == '0':
                 done = True
                 pass
         pass
 
-    def real_time_classification_test(self):
+    def repeatability_classification_test(self):
         # Shows menu for classifying gesture data
         done = False
 
@@ -259,8 +314,8 @@ class ClassificationMenu:
             print("------------------------")
             print("REAL TIME CLASSIFICATION")
             print("------------------------")
-            print("(1) - Single Feature:Kernel Classification Test")
-            print("(2) - Multiple Feature:Kernel Classification Test")
+            print("(1) - Single Feature")
+            print("(2) - All Features")
             print("(0) - Back")
 
             choice = raw_input("Your Choice: ")
@@ -418,7 +473,8 @@ class ClassificationMenu:
         # Get all trained data
         pickle_files = io.get_pickle_files()
         # Get all unseen data
-        unseen_data_files = io.get_data_files(directory=io.uns_dir)
+        unseen_data_files = io.get_unseen_data_files(combined=False)
+        unseen_data_files.extend(io.get_unseen_data_files(combined=True))
         # Get all types of features
         feature_set_list = [
             'finger-angle-and-palm-distance',

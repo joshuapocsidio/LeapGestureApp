@@ -45,6 +45,7 @@ class TrainingMenu:
 
     def single_training(self, combined=False):
         data_files = io.get_data_files(combined=combined)
+        data_files.extend(io.get_data_files(combined=True))
 
         print("")
         print("~ ~ ~ ~ ~ ~ ~ ~ LIST OF DATA SOURCE ~ ~ ~ ~ ~ ~ ~ ~")
@@ -81,7 +82,7 @@ class TrainingMenu:
                 self.params.append(activation)
 
                 training_summary = self.train_auto(csv_file=data_file, subject_name=subject_name,
-                                                   feature_type=feature_set)
+                                                   feature_type=feature_set, gesture_set=gesture_set)
                 file_name = io.save_report(file_name=file_name, subject_name=subject_name, report_header='training',
                                            line=training_summary, classifier_type=self.classifier_type)
         elif self.classifier_type == 'dt':

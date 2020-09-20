@@ -23,13 +23,24 @@ class Trainer:
         pass
 
     def save(self, pickle_name):
-        io.save_classifier(pickle_name=pickle_name, data=self.classifier)
-        io.save_scale(pickle_name=pickle_name, data=self.std_scale)
+        io.save_classifier(pickle_name=pickle_name, data=self)
+        # io.save_classifier(pickle_name=pickle_name, data=self.classifier)
+        # io.save_scale(pickle_name=pickle_name, data=self.std_scale)
         pass
 
     def load(self, pickle_name):
-        self.classifier = io.load_classifier(pickle_name=pickle_name)
-        self.std_scale = io.load_scale(pickle_name)
+        trainer = io.load_classifier(pickle_name=pickle_name)
+        self.subject_name = trainer.subject_name
+        self.classifier = trainer.classifier
+        self.classifier_name = trainer.classifier_name
+        self.gesture_set = trainer.gesture_set
+        self.feature_type = trainer.feature_type
+        self.training_acc = trainer.training_acc
+        self.testing_acc = trainer.testing_acc
+        self.std_scale = trainer.std_scale
+
+        # self.classifier = io.load_classifier(pickle_name=pickle_name)
+        # self.std_scale = io.load_scale(pickle_name)
         ''' UNCOMMENT FOR DEBUGGING
         # print self.classifier
         # print self.std_scale
@@ -121,7 +132,7 @@ class DT_Trainer(Trainer):
         pass
 
     def save_classifier(self):
-        pickle_name = "(" + self.subject_name + ") SVM_" + self.feature_type + "_" + self.criterion_type + ".pickle"
+        pickle_name = "DT (" + self.subject_name + ") " + self.gesture_set + "--" + self.feature_type + "_" + self.criterion_type + ".pickle"
         # print("Saving in : " + pickle_name)
         self.save(pickle_name=pickle_name)
         pass

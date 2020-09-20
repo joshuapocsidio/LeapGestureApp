@@ -26,21 +26,35 @@ class LeapDataClassifier:
                                              subject_name=subject_name)
 
     def do_classification_from_csv(self, pickle_file, test_subject, comparison_subject, classifier_type, gesture_set,
-                                   feature_set, unseen_data, file_name):
+                                   feature_set, unseen_data, file_name, ):
         self.initialize(subject_name=test_subject)
 
         X_data_set, y_data_set = self.acquisitor.acquire_data_from_csv(csv_file=unseen_data)
         trainer = None
 
         if lower(classifier_type) == 'nn':
+            # Get set hyper parameters
+            activation = pickle_file.split(".")[0].split("--")[1].split("_")[1]
             # Get NN Trainer
+            trainer = NN_Trainer(subject_name=test_subject, feature_type=feature_set, activation=activation,
+                                 gesture_set=gesture_set)
+            trainer.load(pickle_name=pickle_file)
             pass
         elif lower(classifier_type) == 'svm':
+            # Get set hyper parameters
             kernel_type = pickle_file.split(".")[0].split("--")[1].split("_")[1]
+            # Get SVM Trainer
             trainer = SVM_Trainer(subject_name=test_subject, feature_type=feature_set, kernel_type=kernel_type,
                                   gesture_set=gesture_set)
+            trainer.load(pickle_name=pickle_file)
+        elif lower(classifier_type) == 'dt':
+            # Get set hyper parameters
+            criterion_type = pickle_file.split(".")[0].split("--")[1].split("_")[1]
+            # Get NN Trainer
+            trainer = DT_Trainer(subject_name=test_subject, feature_type=feature_set, criterion_type=criterion_type,
+                                 gesture_set=gesture_set)
+            trainer.load(pickle_name=pickle_file)
 
-            trainer.load(pickle_file)
         # Create time and classification lists
         time_list = []
 
@@ -69,7 +83,10 @@ class LeapDataClassifier:
             gesture_set=gesture_set,
             feature_set=feature_set,
             file_name=file_name,
-            comparison_subject=comparison_subject
+            comparison_subject=comparison_subject,
+            file_path=pickle_file,
+            unseen_data=unseen_data,
+            trainer=trainer
         )
 
         return file_name
@@ -154,43 +171,68 @@ class LeapDataClassifier:
 
         return res
 
-    def process_modified_test_results(self, comparison_subject, test_subject, classifier_type, correct_classification, time_list,
-                                      gesture_set, feature_set, file_name):
+    def process_modified_test_results(self, comparison_subject, test_subject, classifier_type, correct_classification,
+                                      time_list, trainer,
+                                      gesture_set, feature_set, file_name, file_path, unseen_data,
+                                      verbose=False):
         # Calculate average time taken to perform classification algorithms between multiple test hand instances
         avg_time = (sum(time_list)) / (len(time_list))
         # Calculate average accuracy of classification algorithm between multiple test hand instances
         accuracy = round(100.0 * (float(correct_classification) / (float(len(time_list)))), 2)
 
+        train_accuracy = round(trainer.training_acc * 100.0, 3)
+
+        # Get pickle file name without folders
+        pickle_file = file_path.split("\\")[-1].split(".")[0]
+        unseen_data = unseen_data.split("\\")[-1].split(".")[0]
         if test_subject == comparison_subject:
             title = "PERSONALIZED TEST"
         else:
             title = "NON-PERSONALIZED TEST"
 
         summary = """
+
 __________________________________________________________________________________________________
-        %s
+Test Subject Pickle    : %s 
+Unseen Subject Data    : %s
 __________________________________________________________________________________________________
+        %s 
+--------------------------------------------------------------------------------------------------
         Subject        :    %s
+        Unseen Subject :    %s
         Feature        :    %s
         Gesture Set    :    %s
         Correct        :    %s
         Incorrect      :    %s
         Result         :    %s / %s
+        Avg Time       :    %s seconds
+        
+        TRAINING 
         Accuracy       :    %s %%
-        Avg Time       :    %s seconds\n""" % (title,
-                                               comparison_subject,
-                                               feature_set,
-                                               gesture_set,
-                                               str(correct_classification),
-                                               str(len(time_list) - correct_classification),
-                                               str(correct_classification),
-                                               str(len(time_list)),
-                                               str(accuracy),
-                                               str(avg_time)
-                                               )
+        
+        TESTING
+        Accuracy       :    %s %%
+        
+        \n""" % (pickle_file,
+                 unseen_data,
+                 title,
+                 test_subject,
+                 comparison_subject,
+                 feature_set,
+                 gesture_set,
+                 str(correct_classification),
+                 str(len(time_list) - correct_classification),
+                 str(correct_classification),
+                 str(len(time_list)),
+                 str(avg_time),
+                 str(train_accuracy),
+                 str(accuracy),
+                 )
 
         # Print out results in summary form
-        print(summary)
+        if verbose is True:
+            print(summary)
+            pass
         # Save summary onto report file
         return io.save_report(subject_name=self.subject_name, gesture_set=gesture_set, feature_set=feature_set,
                               report_header='classification', classifier_type=classifier_type, line=summary,
