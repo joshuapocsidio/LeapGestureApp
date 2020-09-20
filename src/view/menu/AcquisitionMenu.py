@@ -5,6 +5,7 @@ import time
 import leapio.LeapIO as io
 import leapio.Printer as printer
 from controller.LeapDataAcquisitor import LeapDataAcquisitor
+from controller.LeapHandAcquisitor import LeapHandAcquisitor
 from leapio import Printer
 
 def show(controller):
@@ -186,8 +187,19 @@ def test_manual_acquisition(controller):
         if choice != '0' and choice is not None and choice != '':
             subject_name = prompt_subject_name()
             # Initialise the Acquisitor
-            acquisitor = LeapDataAcquisitor(leap_controller=controller, subject_name=subject_name)
-            hand_set = acquisitor.test_get_hand_data_set(iterations=10)
+            # acquisitor = LeapDataAcquisitor(leap_controller=controller, subject_name=subject_name)
+            # hand_set = acquisitor.test_get_hand_data_set(iterations=10)
+            #
+
+
+            acquisitor = LeapHandAcquisitor(leap_controller=controller)
+            hand_set = acquisitor.acquire_multiple_hand_data(subject=subject_name)
+
+            for hand in hand_set:
+                print(hand.palm_position)
+
+            print("NOW LOADING...")
+            hand_set = acquisitor.load_hand_data_set(subject=subject_name)
 
             for hand in hand_set:
                 print(hand.palm_position)

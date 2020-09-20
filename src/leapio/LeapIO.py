@@ -360,3 +360,11 @@ def save_hand_pickle(data, subject):
     pickle_file.close()
 
     return file_path
+
+def load_hand_pickle(subject):
+    file_path = han_dir + subject + ".pickle"
+
+    pickle_file = open(file_path, 'rb')
+    data = pickle.load(pickle_file)
+
+    return data
